@@ -1,4 +1,4 @@
-package math;
+package proj.math;
 
 public class Vector2D implements Cloneable {
     double x, y;

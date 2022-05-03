@@ -1,5 +1,5 @@
-package bhtree;
-import project.Cell;
+package proj.bhtree;
+import proj.Cell;
 public class BHTree {
     private Cell cell;
     private final QNode qNode;
@@ -62,27 +62,27 @@ public class BHTree {
     }
 
 
-    public void updateGravity(Cell cell) {
-
-        if (this.cell == null || cell.equals(this.cell))
-            return;
-
-        if (isLeaf())
-            cell.applyGravity(this.cell);
-        else {
-            double s = qNode.length();
-            double d = this.cell.distanceTo(cell);
-            double THETA = 0.5;
-            if ((s / d) < THETA)
-//                cell.applyGravity(this.cell);
-            else {
-                nwChild.updateGravity(cell);
-                neChild.updateGravity(cell);
-                swChild.updateGravity(cell);
-                seChild.updateGravity(cell);
-            }
-        }
-    }
+//    public void updateGravity(Cell cell) {
+//
+//        if (this.cell == null || cell.equals(this.cell))
+//            return;
+//
+//        if (isLeaf())
+////            cell.applyGravity(this.cell);
+//        else {
+//            double s = qNode.length();
+//            double d = this.cell.distanceTo(cell);
+//            double THETA = 0.5;
+//            if ((s / d) < THETA)
+////                cell.applyGravity(this.cell);
+//            else {
+//                nwChild.updateGravity(cell);
+//                neChild.updateGravity(cell);
+//                swChild.updateGravity(cell);
+//                seChild.updateGravity(cell);
+//            }
+//        }
+//    }
 
     public String toString() {
         return String.format("cell %s\r\n nw: %s\tne: %s\tsw: %s\tse:%s", cell, nwChild, neChild, swChild, seChild);
