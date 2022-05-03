@@ -74,7 +74,7 @@ public class BHTree {
             double d = this.cell.distanceTo(cell);
             double THETA = 0.5;
             if ((s / d) < THETA)
-                cell.applyGravity(this.cell);
+//                cell.applyGravity(this.cell);
             else {
                 nwChild.updateGravity(cell);
                 neChild.updateGravity(cell);
