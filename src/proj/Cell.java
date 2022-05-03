@@ -3,8 +3,8 @@ import proj.bhtree.BHTree;
 import edu.princeton.cs.algs4.StdDraw;
 import java.awt.Color;
 public class Cell {
-    static double dt = 1/15;
-    static double delta = 1/15;
+    static double dt = 1.0/15.0;
+    static double delta = 1.0/15.0;
     static int total_num = 0;
     int id;
     private final double radius;
@@ -74,15 +74,34 @@ public class Cell {
         StdDraw.setPenColor(this.color);
         StdDraw.filledCircle(this.pos_x, this.pos_y, this.radius);
     }
-
+    public double getX(){
+        return this.pos_x;
+    }
+    public double getY(){
+        return this.pos_y;
+    }
+    public double getRadius(){
+        return this.radius;
+    }
+    public double getPerception_r(){
+        return this.perception_r;
+    }
+    public Color getColor(){
+        return this.color;
+    }
+    public int getColorIndex(){
+        return this.color_index;
+    }
     public static void main(String[] args) {
-        Cell cell = new Cell(0.1,0.5,0.5,Color.RED, 10);
-        for(int i = 0; i<10000; i++) {
+        Cell cell = new Cell(0.1,0.5,0,Color.RED, 10);
+        for(int i = 0; i<10; i++) {
             cell.move();
+            cell.draw();
         }
-        System.out.println(cell.id);
-        System.out.println(cell.pos_y);
+//        System.out.println(cell.id);
+        System.out.println(cell.getColorIndex());
+        System.out.println(cell.getY());
 
-        cell.draw();
+//        cell.draw();
     }
 }
