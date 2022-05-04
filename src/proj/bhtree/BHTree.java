@@ -1,6 +1,7 @@
 package proj.bhtree;
 import proj.Cell;
 import proj.bhtree.QuadNode;
+import edu.princeton.cs.algs4.StdOut;
 public class BHTree {
     private Cell cell;
     private final QuadNode qNode;
@@ -19,46 +20,43 @@ public class BHTree {
     }
 
     public void insert(Cell cell) {
-        if (this.cell == null) {
-            this.cell = cell;
-            return;
+        if (this.qNode.contains(cell.getX(), cell.getY())) {
+            if (this.cell == null) {
+                this.cell = cell;
+                return;
+            }
+            if (!hasLeaf()) { // no subtrees
+                this.createSubTrees();
+                insertChild(cell);
+            } else {
+//                insertChild(this.cell);
+                insertChild(cell);
+            }
         }
-
-        if (! isLeaf()) {
-//            this.cell = this.cell.add(cell);
-            _insertRealChild(cell);
-        }
-
-        else {
-            nwChild = new BHTree(new QuadNode(qNode.getX() - qNode.getLength() /4.0,
-                    qNode.getY() + qNode.getLength() /4.0, qNode.getLength() /2.0));
-            neChild = new BHTree(new QuadNode(qNode.getX() + qNode.getLength() /4.0,
-                    qNode.getY() + qNode.getLength() /4.0, qNode.getLength() /2.0));
-            seChild = new BHTree(new QuadNode(qNode.getX() + qNode.getLength() /4.0,
-                    qNode.getY() - qNode.getLength() /4.0, qNode.getLength() /2.0));
-            swChild = new BHTree(new QuadNode(qNode.getX() - qNode.getLength() /4.0,
-                    qNode.getY() - qNode.getLength() /4.0, qNode.getLength() /2.0));
-
-            _insertRealChild(this.cell);
-            _insertRealChild(cell);
-
-//            this.cell = this.cell.add(cell);
+        else{
+            StdOut.println("Warning: Cell is out of BHTree!");
         }
     }
 
 
-    private void _insertRealChild(Cell b) {
-        if (b.in(new QuadNode(qNode.getX() - qNode.getLength() /4.0, qNode.getY() + qNode.getLength() /4.0, qNode.getLength() /2.0)))
+    private void insertChild(Cell b) {
+        if (b.in(nwChild.qNode))
             nwChild.insert(b);
-        else if (b.in(new QuadNode(qNode.getX() + qNode.getLength() /4.0, qNode.getY() + qNode.getLength() /4.0, qNode.getLength() /2.0)))
+        else if (b.in(neChild.qNode))
             neChild.insert(b);
-        else if (b.in(new QuadNode(qNode.getX() + qNode.getLength() /4.0, qNode.getY() - qNode.getLength() /4.0, qNode.getLength() /2.0)))
+        else if (b.in(seChild.qNode))
             seChild.insert(b);
-        else if (b.in(new QuadNode(qNode.getX() - qNode.getLength() /4.0, qNode.getY() - qNode.getLength() /4.0, qNode.getLength() /2.0)))
+        else if (b.in(swChild.qNode))
             swChild.insert(b);
     }
+    public void createSubTrees() {
+        this.nwChild = new BHTree(qNode.NW_Q());
+        this.neChild = new BHTree(qNode.NE_Q());
+        this.swChild= new BHTree(qNode.SW_Q());
+        this.seChild = new BHTree(qNode.SE_Q());
+    }
 
-    private boolean isLeaf() {
+    private boolean hasLeaf() {
         return (nwChild == null && neChild == null && swChild == null && seChild == null);
     }
 

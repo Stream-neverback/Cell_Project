@@ -23,20 +23,20 @@ public class QuadNode {
         return y_center;
     }
 
-    public QuadNode NW_Q () { //
-        return new QuadNode(x_center - length / 4, y_center - length / 4, length / 2);
+    public QuadNode NW_Q() { //
+        return new QuadNode(this.getX() - this.getLength() / 4, this.getY() - this.getLength() / 4, this.getLength() / 2);
     }
 
-    public QuadNode NE_Q () {
-        return new QuadNode(x_center + length / 4, y_center - length / 4, length / 2);
+    public QuadNode NE_Q() {
+        return new QuadNode(this.getX() + this.getLength() / 4, this.getY() - this.getLength() / 4, this.getLength() / 2);
     }
 
-    public QuadNode SW_Q () {
-        return new QuadNode(x_center - length / 4, y_center + length / 4, length / 2);
+    public QuadNode SW_Q() {
+        return new QuadNode(this.getX() - this.getLength() / 4, this.getY() + this.getLength() / 4, this.getLength() / 2);
     }
 
-    public QuadNode SE_Q () {
-        return new QuadNode(x_center + length / 4, y_center + length / 4, length / 2);
+    public QuadNode SE_Q() {
+        return new QuadNode(this.getX() + this.getLength() / 4, this.getY() + this.getLength() / 4, this.getLength() / 2);
     }
     public boolean contains(double x, double y) {
         double halfLen = this.length / 2.0;
