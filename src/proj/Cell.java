@@ -1,5 +1,6 @@
 package proj;
 import proj.bhtree.BHTree;
+import proj.bhtree.QuadNode;
 import edu.princeton.cs.algs4.StdDraw;
 import java.awt.Color;
 public class Cell {
@@ -46,7 +47,7 @@ public class Cell {
         return distanceTo(other) >= Math.pow((this.radius + other.radius), 2.0);
     }
 
-    public boolean in(BHTree.QNode q) {
+    public boolean in(QuadNode q) {
         return q.contains(this.pos_x, this.pos_y);
     }
     public void move(){
