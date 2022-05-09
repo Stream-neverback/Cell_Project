@@ -23,17 +23,17 @@ public class Cell {
     static final int BLUE = 2;
     static final int YELLOW = 3;
 
-    public Cell(double radius, double position_x, double position_y, int color_index, double perception_radius){
+    public Cell(double radius, double position_x, double position_y, Color color, double perception_radius){
         this.id = total_num;
         this.total_num += 1;
         this.radius = radius;
         this.pos_x = position_x;
         this.pos_y = position_y;
         this.color = color;
-        if(this.color_index == RED) this.color = Color.RED; red_num = 1;
-        if(this.color_index == GREEN) this.color = Color.GREEN; green_num = 1;
-        if(this.color_index == BLUE) this.color = Color.BLUE; blue_num = 1;
-        if(this.color_index == YELLOW) this.color = Color.YELLOW; yellow_num = 1;
+        if(this.color == Color.RED) this.color_index = RED; red_num = 1;
+        if(this.color == Color.GREEN) this.color_index = GREEN; green_num = 1;
+        if(this.color == Color.BLUE) this.color_index = BLUE; blue_num = 1;
+        if(this.color == Color.YELLOW) this.color_index = YELLOW; yellow_num = 1;
         this.perception_r = perception_radius;
     }
 
