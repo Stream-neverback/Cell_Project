@@ -100,7 +100,31 @@ public class Cell {
     public int getColorIndex(){
         return this.color_index;
     }
+    public void add_red_num(){ this.red_num += 1; }
+    public void add_green_num(){ this.green_num += 1; }
+    public void add_blue_num(){ this.blue_num += 1; }
+    public void add_yellow_num(){ this.yellow_num += 1; }
 
+    public void add_num(Cell cell){
+        switch(cell.getColorIndex()){
+            case RED:
+                this.red_num += 1;
+                break;
+
+            case GREEN:
+                this.green_num += 1;
+                break;
+
+            case BLUE:
+                this.blue_num += 1;
+                break;
+
+            case YELLOW:
+                this.yellow_num += 1;
+                break;
+            default: break;
+        }
+    }
     public void check_color() {
         double sum_num = this.red_num + this.blue_num + this.green_num + this.yellow_num;
         // check red
