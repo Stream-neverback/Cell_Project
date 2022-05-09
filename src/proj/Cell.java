@@ -7,6 +7,10 @@ public class Cell {
     static double dt = 1.0/15.0;
     static double delta = 1.0/15.0;
     static int total_num = 0;
+    private double red_num = 0;
+    private double green_num = 0;
+    private double blue_num = 0;
+    private double yellow_num = 0;
     int id;
     private final double radius;
     private double pos_x;
@@ -19,17 +23,17 @@ public class Cell {
     static final int BLUE = 2;
     static final int YELLOW = 3;
 
-    public Cell(double radius, double position_x, double position_y, Color color, double perception_radius){
+    public Cell(double radius, double position_x, double position_y, int color_index, double perception_radius){
         this.id = total_num;
         this.total_num += 1;
         this.radius = radius;
         this.pos_x = position_x;
         this.pos_y = position_y;
         this.color = color;
-        if(this.color == Color.RED) this.color_index = RED;
-        if(this.color == Color.GREEN) this.color_index = GREEN;
-        if(this.color == Color.BLUE) this.color_index = BLUE;
-        if(this.color == Color.YELLOW) this.color_index = YELLOW;
+        if(this.color_index == RED) this.color = Color.RED; red_num = 1;
+        if(this.color_index == GREEN) this.color = Color.GREEN; green_num = 1;
+        if(this.color_index == BLUE) this.color = Color.BLUE; blue_num = 1;
+        if(this.color_index == YELLOW) this.color = Color.YELLOW; yellow_num = 1;
         this.perception_r = perception_radius;
     }
 
@@ -70,6 +74,9 @@ public class Cell {
             default: break;
         }
     }
+    public void check_color(BHTree tree){
+
+    }
 
     public void draw() {
         StdDraw.setPenColor(this.color);
@@ -92,6 +99,83 @@ public class Cell {
     }
     public int getColorIndex(){
         return this.color_index;
+    }
+
+    public void check_color() {
+        double sum_num = this.red_num + this.blue_num + this.green_num + this.yellow_num;
+        // check red
+        if (this.color == Color.RED){
+            if(this.red_num >= 3 && this.red_num/sum_num > 0.7){
+                this.color = Color.GREEN;
+                this.color_index = GREEN;
+                this.red_num -= 1;
+                this.green_num += 1;
+            } else if (this.yellow_num >= 1 && this.yellow_num/sum_num < 0.1) {
+                this.color = Color.YELLOW;
+                this.color_index = YELLOW;
+                this.red_num -= 1;
+                this.yellow_num += 1;
+            }
+        }
+
+        // check green
+        if (this.color == Color.GREEN){
+            if(this.green_num >= 3 && this.green_num/sum_num > 0.7){
+                this.color = Color.BLUE;
+                this.color_index = BLUE;
+                this.green_num -= 1;
+                this.blue_num += 1;
+            } else if (this.red_num >= 1 && this.red_num/sum_num < 0.1) {
+                this.color = Color.RED;
+                this.color_index = RED;
+                this.green_num -= 1;
+                this.red_num += 1;
+            }
+        }
+
+        // check blue
+        if (this.color == Color.BLUE){
+            if(this.blue_num >= 3 && this.blue_num/sum_num > 0.7){
+                this.color = Color.YELLOW;
+                this.color_index = YELLOW;
+                this.blue_num -= 1;
+                this.yellow_num += 1;
+            } else if (this.green_num >= 1 && this.green_num/sum_num < 0.1) {
+                this.color = Color.GREEN;
+                this.color_index = GREEN;
+                this.blue_num -= 1;
+                this.green_num += 1;
+            }
+        }
+        // check blue
+        if (this.color == Color.BLUE){
+            if(this.blue_num >= 3 && this.blue_num/sum_num > 0.7){
+                this.color = Color.YELLOW;
+                this.color_index = YELLOW;
+                this.blue_num -= 1;
+                this.yellow_num += 1;
+            } else if (this.green_num >= 1 && this.green_num/sum_num < 0.1) {
+                this.color = Color.GREEN;
+                this.color_index = GREEN;
+                this.blue_num -= 1;
+                this.green_num += 1;
+            }
+        }
+
+        // check yellow
+        if (this.color == Color.YELLOW){
+            if(this.yellow_num >= 3 && this.yellow_num/sum_num > 0.7){
+                this.color = Color.RED;
+                this.color_index = RED;
+                this.yellow_num -= 1;
+                this.red_num += 1;
+            } else if (this.yellow_num >= 1 && this.yellow_num/sum_num < 0.1) {
+                this.color = Color.BLUE;
+                this.color_index = BLUE;
+                this.yellow_num -= 1;
+                this.blue_num += 1;
+            }
+        }
     }
     public static void main(String[] args) {
         Cell cell = new Cell(0.1,0.5,0,Color.RED, 10);

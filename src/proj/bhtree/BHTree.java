@@ -60,6 +60,11 @@ public class BHTree {
         return (nwChild == null && neChild == null && swChild == null && seChild == null);
     }
 
+//    public boolean checkDetection(QuadNode qnode) {
+//        double detection_length = this.cell.getPerception_r();
+//        double x_pos = this.cell.getX();
+//        double y_pos = this.cell.getY();
+//    }
 
 
 

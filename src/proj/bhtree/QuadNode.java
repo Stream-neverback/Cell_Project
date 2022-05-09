@@ -1,6 +1,7 @@
 package proj.bhtree;
 import proj.Cell;
 import proj.bhtree.BHTree;
+import proj.Cell;
 public class QuadNode {
 
     private final double x_center;
