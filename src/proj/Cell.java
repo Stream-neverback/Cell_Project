@@ -46,6 +46,18 @@ public class Cell {
     public double distanceTo(Cell other){
         return Math.sqrt(Math.pow((this.pos_x - other.pos_x), 2.0) + Math.pow((this.pos_y - other.pos_y), 2.0));
     }
+    public double x_distanceTo(Cell other){
+        return Math.abs(other.pos_x-this.pos_x);
+    }
+    public double y_distanceTo(Cell other){
+        return Math.abs(other.pos_y-this.pos_y);
+    }
+
+    public boolean inDetection(Cell other){
+        return (this.x_distanceTo(other) <= this.perception_r &&
+                this.y_distanceTo(other) <= this.perception_r);
+
+    }
 
     public Boolean Cell_overleap(Cell other){
         return distanceTo(other) >= Math.pow((this.radius + other.radius), 2.0);
@@ -73,9 +85,6 @@ public class Cell {
                 break;
             default: break;
         }
-    }
-    public void check_color(BHTree tree){
-
     }
 
     public void draw() {

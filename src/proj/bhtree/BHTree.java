@@ -25,11 +25,12 @@ public class BHTree {
                 this.cell = cell;
                 return;
             }
-            if (!hasLeaf()) { // no subtrees
-                this.createSubTrees();
+            if (!hasNoLeaf()) { // have subtrees internal node
+//                this.createSubTrees();
                 insertChild(cell);
-            } else {
+            } else { // external node
 //                insertChild(this.cell);
+                this.createSubTrees();
                 insertChild(cell);
             }
         }
@@ -56,15 +57,35 @@ public class BHTree {
         this.seChild = new BHTree(qNode.SE_Q());
     }
 
-    private boolean hasLeaf() {
+    private boolean hasNoLeaf() {
         return (nwChild == null && neChild == null && swChild == null && seChild == null);
     }
 
-//    public boolean checkDetection(QuadNode qnode) {
-//        double detection_length = this.cell.getPerception_r();
-//        double x_pos = this.cell.getX();
-//        double y_pos = this.cell.getY();
-//    }
+    public void checkDetection(Cell cell) {
+        double detection_half_length = cell.getPerception_r();
+        double x_pos = cell.getX();
+        double y_pos = cell.getY();
+        if (hasNoLeaf()){ // No subtree, no need to go on
+            if(this.qNode.contains_rec(x_pos, y_pos, detection_half_length)){
+                if(cell.inDetection(this.cell)){
+                    cell.add_num(this.cell);
+                    cell.check_color();
+                }
+            }
+        }
+        else{
+            if(this.qNode.contains_rec(x_pos, y_pos, detection_half_length)){
+                if(cell.inDetection(this.cell)){
+                    cell.add_num(this.cell);
+                }
+            }
+            this.nwChild.qNode.contains_rec(x_pos, y_pos, detection_half_length);
+            this.neChild.qNode.contains_rec(x_pos, y_pos, detection_half_length);
+            this.swChild.qNode.contains_rec(x_pos, y_pos, detection_half_length);
+            this.seChild.qNode.contains_rec(x_pos, y_pos, detection_half_length);
+        }
+
+    }
 
 
 

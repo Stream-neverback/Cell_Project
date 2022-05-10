@@ -46,6 +46,13 @@ public class QuadNode {
                 y <= this.y_center + halfLen &&
                 y >= this.y_center - halfLen);
     }
+    public boolean contains_rec(double x, double y, double half_length) {
+        double x_dis = Math.abs(x - this.x_center);
+        double y_dis = Math.abs(y - this.y_center);
+        double halfLen = this.length / 2.0;
+        return (x_dis <= half_length + halfLen &&
+                y_dis <= half_length + halfLen);
+    }
 
     @Override
     public String toString() {
