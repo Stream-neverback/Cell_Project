@@ -93,5 +93,23 @@ public class BHTree {
         return String.format("cell %s\r\n nw: %s\tne: %s\tsw: %s\tse:%s", cell, nwChild, neChild, swChild, seChild);
     }
 
-    
+    public BHTree getNeChild() {
+        return neChild;
+    }
+
+    public BHTree getNwChild() {
+        return nwChild;
+    }
+
+    public BHTree getSeChild() {
+        return seChild;
+    }
+
+    public BHTree getSwChild() {
+        return swChild;
+    }
+
+    public Cell getCell() {
+        return cell;
+    }
 }

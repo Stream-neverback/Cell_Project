@@ -58,7 +58,7 @@ public class Console {
         input.close();
     }
 
-    public Cell[] getParticles() {
+    public Cell[] getCells() {
         return cells;
     }
 
