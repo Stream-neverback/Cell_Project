@@ -86,6 +86,15 @@ public class BHTree {
         }
 
     }
+    public static void searchNode(){
+
+    }
+
+    public static void changeColor(){
+        // length = 0 return
+        // else, change color in ranges.
+    }
+
 
 
 

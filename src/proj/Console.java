@@ -27,10 +27,10 @@ public class Console {
         double range_x = input.nextInt();
         double range_y = input.nextInt();
         this.range = new double[]{0, range_x, 0, range_y};
-        System.out.println("Area of the floorplan: [" + range_x + ", " + range_y + "]");
+        System.out.println("Area of the floor plan: [" + range_x + ", " + range_y + "]");
         int count = input.nextInt();
         cells = new Cell[count];
-        System.out.println("Cells infomation: ");
+        System.out.println("Cells information: ");
         for (int i = 0; i < count; i++) {
             double x = input.nextDouble(); // input coordinate x of the cell
             double y = input.nextDouble(); // input coordinate y of the cell

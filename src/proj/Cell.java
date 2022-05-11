@@ -16,6 +16,7 @@ public class Cell {
     private double pos_x;
     private double pos_y;
     private int color_index;
+    private int last_color_index;
     private Color color;
     double perception_r;
     static final int RED = 0;
@@ -59,7 +60,7 @@ public class Cell {
 
     }
 
-    public Boolean Cell_overleap(Cell other){
+    public Boolean CellOverlap(Cell other){
         return distanceTo(other) >= Math.pow((this.radius + other.radius), 2.0);
     }
 
@@ -210,6 +211,7 @@ public class Cell {
             }
         }
     }
+
     public static void main(String[] args) {
         Cell cell = new Cell(0.1,0.5,0,Color.RED, 10);
         for(int i = 0; i<10; i++) {
