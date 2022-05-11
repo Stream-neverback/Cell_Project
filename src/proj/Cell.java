@@ -4,8 +4,8 @@ import proj.bhtree.QuadNode;
 import edu.princeton.cs.algs4.StdDraw;
 import java.awt.Color;
 public class Cell {
-    static double wall_length = 0; // y-direction
     static double wall_width = 0; // x-direction
+    static double wall_length = 0; // y-direction
     static double dt = 1.0/15.0;
     static double delta = 1.0/15.0;
     static int total_num = 0;
@@ -24,14 +24,9 @@ public class Cell {
     static final int GREEN = 1;
     static final int BLUE = 2;
     static final int YELLOW = 3;
-    public static void initWall(double wX, double wY){
-        wall_width = wX;
-        wall_length = wY;
-    }
 
     public Cell(double radius, double position_x, double position_y, Color color, double perception_radius){
         this.radius = radius;
-
         this.id = total_num;
         this.total_num += 1;
         this.pos_x = position_x;
@@ -43,7 +38,10 @@ public class Cell {
         if(this.color == Color.YELLOW) this.color_index = YELLOW; yellow_num = 1;
         this.perception_r = perception_radius;
     }
-
+    public static void initWall(double width, double height){
+        wall_width = width;
+        wall_length = height;
+    }
     public Cell(Color color){
         this(1, 0, 0, color, 1);
     }
@@ -54,7 +52,6 @@ public class Cell {
         return Math.sqrt(Math.pow((this.pos_x - other.pos_x), 2.0) + Math.pow((this.pos_y - other.pos_y), 2.0));
     }
     public double x_distanceTo(Cell other){
-//        System.out.println(other);
         return Math.abs(other.pos_x-this.pos_x);
     }
     public double y_distanceTo(Cell other){
@@ -72,9 +69,9 @@ public class Cell {
     }
     public boolean Cell_NotContactWall(){
         return this.pos_x >= this.radius &&
-                this.wall_length - this.pos_x >= this.radius &&
+                this.wall_width - this.pos_x >= this.radius &&
                 this.pos_y >= this.radius &&
-                this.wall_width - this.pos_y >= radius;
+                this.wall_length - this.pos_y >= radius;
     }
 
     public boolean in(QuadNode q) {
@@ -83,24 +80,27 @@ public class Cell {
     public void move(){
         switch(this.color_index){
             case RED:
-                if(this.pos_y+delta<wall_length-this.radius) {
+                if(this.pos_y + delta < wall_length - this.radius) {
                     this.pos_y = this.pos_y + delta;
                 }
                 break;
 
             case GREEN:
-                if(this.pos_y-delta>0+this.radius){
-                this.pos_y = this.pos_y - delta;}
+                if(this.pos_y - delta < this.radius) {
+                    this.pos_y = this.pos_y - delta;
+                }
                 break;
 
             case BLUE:
-                if(this.pos_x-delta>0+this.radius){
-                this.pos_x = this.pos_x - delta;}
+                if(this.pos_x - delta < this.radius) {
+                    this.pos_x = this.pos_x - delta;
+                }
                 break;
 
             case YELLOW:
-                if(this.pos_x+delta<wall_width-this.radius){
-                this.pos_x = this.pos_x + delta;}
+                if(this.pos_x + delta < wall_width - this.radius) {
+                    this.pos_x = this.pos_x + delta;
+                }
                 break;
             default: break;
         }
@@ -230,7 +230,6 @@ public class Cell {
         }
     }
     public static void main(String[] args) {
-        Cell.initWall(1,1);
         Cell cell = new Cell(0.1,0.5,0,Color.RED, 10);
         for(int i = 0; i<10; i++) {
             cell.move();
