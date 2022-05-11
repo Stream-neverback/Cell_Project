@@ -4,8 +4,8 @@ import proj.bhtree.QuadNode;
 import edu.princeton.cs.algs4.StdDraw;
 import java.awt.Color;
 public class Cell {
-    static double wall_length = 0; // x-direction
-    static double wall_width = 0; // y-direction
+    static double wall_length = 0; // y-direction
+    static double wall_width = 0; // x-direction
     static double dt = 1.0/15.0;
     static double delta = 1.0/15.0;
     static int total_num = 0;
@@ -24,11 +24,14 @@ public class Cell {
     static final int GREEN = 1;
     static final int BLUE = 2;
     static final int YELLOW = 3;
+    public static void initWall(double wX, double wY){
+        wall_width = wX;
+        wall_length = wY;
+    }
 
-    public Cell(double radius, double position_x, double position_y, Color color, double perception_radius, double wall_x, double wall_y){
+    public Cell(double radius, double position_x, double position_y, Color color, double perception_radius){
         this.radius = radius;
-        this.wall_length = wall_x;
-        this.wall_width = wall_y;
+
         this.id = total_num;
         this.total_num += 1;
         this.pos_x = position_x;
@@ -42,15 +45,16 @@ public class Cell {
     }
 
     public Cell(Color color){
-        this(1, 0, 0, color, 1, wall_length, wall_width);
+        this(1, 0, 0, color, 1);
     }
     public Cell(){
-        this(1, 0, 0, Color.RED, 1, wall_length, wall_width);
+        this(1, 0, 0, Color.RED, 1);
     }
     public double distanceTo(Cell other){
         return Math.sqrt(Math.pow((this.pos_x - other.pos_x), 2.0) + Math.pow((this.pos_y - other.pos_y), 2.0));
     }
     public double x_distanceTo(Cell other){
+//        System.out.println(other);
         return Math.abs(other.pos_x-this.pos_x);
     }
     public double y_distanceTo(Cell other){
@@ -79,19 +83,24 @@ public class Cell {
     public void move(){
         switch(this.color_index){
             case RED:
-                this.pos_y = this.pos_y + delta;
+                if(this.pos_y+delta<wall_length-this.radius) {
+                    this.pos_y = this.pos_y + delta;
+                }
                 break;
 
             case GREEN:
-                this.pos_y = this.pos_y - delta;
+                if(this.pos_y-delta>0+this.radius){
+                this.pos_y = this.pos_y - delta;}
                 break;
 
             case BLUE:
-                this.pos_x = this.pos_x - delta;
+                if(this.pos_x-delta>0+this.radius){
+                this.pos_x = this.pos_x - delta;}
                 break;
 
             case YELLOW:
-                this.pos_x = this.pos_x + delta;
+                if(this.pos_x+delta<wall_width-this.radius){
+                this.pos_x = this.pos_x + delta;}
                 break;
             default: break;
         }
@@ -221,7 +230,8 @@ public class Cell {
         }
     }
     public static void main(String[] args) {
-        Cell cell = new Cell(0.1,0.5,0,Color.RED, 10,1,1);
+        Cell.initWall(1,1);
+        Cell cell = new Cell(0.1,0.5,0,Color.RED, 10);
         for(int i = 0; i<10; i++) {
             cell.move();
             cell.draw();

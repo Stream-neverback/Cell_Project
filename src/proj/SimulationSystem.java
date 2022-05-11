@@ -60,10 +60,10 @@ public class SimulationSystem {
         if (isGUIMode) {
             StdDraw.show();
             StdDraw.enableDoubleBuffering();
-//            System.out.printf("%f,%f,%f,%f",range[0], range[1],range[2], range[3]);
+            System.out.printf("%f,%f,%f,%f",range[0], range[1],range[2], range[3]);
             StdDraw.setXscale(range[0], range[1]);
             StdDraw.setYscale(range[2], range[3]);
-            StdDraw.setScale(-0.005,Math.max(range[1],range[3]));
+            StdDraw.setScale(-0.001,Math.max(range[1],range[3]));
         }
         int cnt = 0;
         for (double t = 0.0; true; t = t + dt) {

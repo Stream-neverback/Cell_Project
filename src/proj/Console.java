@@ -40,7 +40,8 @@ public class Console {
             Color color = c.equals("r") ? Color.RED : c.equals("g") ? Color.GREEN : c.equals("b") ? Color.BLUE : Color.YELLOW; // judge colors
             System.out.printf("X: %.1f, Y: %.1f, Radius: %.1f, Perception range: %.1f, Color: %s\n", x, y, r, p, c);
 //            System.out.println(x + " " + y + " " + r + " " + p + " " + c);
-            Cell cell = new Cell(r, x, y, color, p, range_x, range_y); // initialize cell
+            Cell.initWall(range_x,range_y);
+            Cell cell = new Cell(r, x, y, color, p); // initialize cell
             cells[i] = cell; // add the cell into array
         }
         terminalMode = !mode.equals("gui"); // default is gui
