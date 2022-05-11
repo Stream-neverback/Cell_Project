@@ -7,6 +7,7 @@ import proj.Console;
 //import proj.oltree.OverlapTree;
 import proj.bhtree.QuadNode;
 
+import java.awt.*;
 import java.util.*;
 
 public class SimulationSystem {
@@ -43,6 +44,7 @@ public class SimulationSystem {
         final boolean isGUIMode = !console.isTerminalMode();
         final Cell[] finalParticles = cells;
         if (range.length == 1) {
+            System.out.println("length = 1");
             double a = range[0];
             range = new double[4];
             range[0] = 0;
@@ -58,8 +60,10 @@ public class SimulationSystem {
         if (isGUIMode) {
             StdDraw.show();
             StdDraw.enableDoubleBuffering();
+//            System.out.printf("%f,%f,%f,%f",range[0], range[1],range[2], range[3]);
             StdDraw.setXscale(range[0], range[1]);
             StdDraw.setYscale(range[2], range[3]);
+            StdDraw.setScale(-0.005,Math.max(range[1],range[3]));
         }
         int cnt = 0;
         for (double t = 0.0; true; t = t + dt) {
@@ -96,6 +100,7 @@ public class SimulationSystem {
                 cnt++;
             }
             if (isGUIMode) {
+//                System.out.println("a");
                 StdDraw.clear(StdDraw.BLACK);
                 Arrays.stream(cells).parallel().forEachOrdered(Cell::draw);
                 // 在树里面寻找是否有这个cell
@@ -108,6 +113,9 @@ public class SimulationSystem {
                             tree.insert(p);
                             p.move();
                         });
+//                StdDraw.setPenColor(Color.RED);
+//                StdDraw.circle(0.5, 0.5, 0.2);
+//                StdDraw.filledCircle(4, 5, 1);
 
 
                 Arrays.stream(cells).parallel().forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
@@ -122,8 +130,9 @@ public class SimulationSystem {
                             .filter(c -> c.in(qNode))
                             .forEachOrdered(p -> {
                                 tree.insert(p);
-                                p.move();
+//                                p.move();
                             });
+
 
 
                     Arrays.stream(cells).parallel().forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
