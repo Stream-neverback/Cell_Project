@@ -60,7 +60,7 @@ public class SimulationSystem {
         if (isGUIMode) {
             StdDraw.show();
             StdDraw.enableDoubleBuffering();
-            System.out.printf("%f,%f,%f,%f",range[0], range[1],range[2], range[3]);
+//            System.out.printf("%f,%f,%f,%f",range[0], range[1],range[2], range[3]);
             StdDraw.setXscale(range[0], range[1]);
             StdDraw.setYscale(range[2], range[3]);
             StdDraw.setScale(-0.001,Math.max(range[1],range[3]));
@@ -116,8 +116,6 @@ public class SimulationSystem {
 //                StdDraw.setPenColor(Color.RED);
 //                StdDraw.circle(0.5, 0.5, 0.2);
 //                StdDraw.filledCircle(4, 5, 1);
-
-
                 Arrays.stream(cells).parallel().forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
                 if (isMouseMode && StdDraw.isMousePressed()) { // 创意：点击鼠标可以实现某些功能，比如点击一下窗口内如果刚好在某个cell范围内可以更改它的颜色
                     double mouse_pressed_x = StdDraw.mouseX();
@@ -172,7 +170,7 @@ public class SimulationSystem {
     }
 
     public static void main(String[] args) {
-        String file_path = "./sample/sample1.txt";
+        String file_path = "./sample/sample2.txt";
         Console console = new Console("gui", file_path);
         SimulationSystem s = new SimulationSystem();
         s.simulation(console, 0.15);
