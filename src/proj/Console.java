@@ -86,8 +86,8 @@ public class Console {
     }
 
     public static void main(String[] args) throws IOException {
-        String file_path = "D:\\Learning\\SUSTech2022春\\DSAA\\proj\\Cell_Project\\src\\proj\\input.txt";
-        Console console = new Console("ter", file_path);
+        String file_path = "./sample/sample1.txt";
+        Console console = new Console("gui", file_path);
     }
 }
 
