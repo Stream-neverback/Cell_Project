@@ -4,8 +4,8 @@ import proj.bhtree.QuadNode;
 import edu.princeton.cs.algs4.StdDraw;
 import java.awt.Color;
 public class Cell {
-    static double wall_length = 0; // x-direction
-    static double wall_width = 0; // y-direction
+    static double wall_width = 0; // x-direction
+    static double wall_length = 0; // y-direction
     static double dt = 1.0/15.0;
     static double delta = 1.0/15.0;
     static int total_num = 0;
@@ -27,8 +27,8 @@ public class Cell {
 
     public Cell(double radius, double position_x, double position_y, Color color, double perception_radius, double wall_x, double wall_y){
         this.radius = radius;
-        this.wall_length = wall_x;
-        this.wall_width = wall_y;
+        this.wall_length = wall_y;
+        this.wall_width = wall_x;
         this.id = total_num;
         this.total_num += 1;
         this.pos_x = position_x;
@@ -42,10 +42,10 @@ public class Cell {
     }
 
     public Cell(Color color){
-        this(1, 0, 0, color, 1, wall_length, wall_width);
+        this(1, 0, 0, color, 1, wall_width, wall_length);
     }
     public Cell(){
-        this(1, 0, 0, Color.RED, 1, wall_length, wall_width);
+        this(1, 0, 0, Color.RED, 1, wall_width, wall_length);
     }
     public double distanceTo(Cell other){
         return Math.sqrt(Math.pow((this.pos_x - other.pos_x), 2.0) + Math.pow((this.pos_y - other.pos_y), 2.0));
@@ -68,9 +68,9 @@ public class Cell {
     }
     public boolean Cell_NotContactWall(){
         return this.pos_x >= this.radius &&
-                this.wall_length - this.pos_x >= this.radius &&
+                this.wall_width - this.pos_x >= this.radius &&
                 this.pos_y >= this.radius &&
-                this.wall_width - this.pos_y >= radius;
+                this.wall_length - this.pos_y >= radius;
     }
 
     public boolean in(QuadNode q) {

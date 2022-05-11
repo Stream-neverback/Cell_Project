@@ -60,6 +60,7 @@ public class SimulationSystem {
             StdDraw.enableDoubleBuffering();
             StdDraw.setXscale(range[0], range[1]);
             StdDraw.setYscale(range[2], range[3]);
+            StdDraw.setScale(0,5);
         }
         int cnt = 0;
         for (double t = 0.0; true; t = t + dt) {
