@@ -4,6 +4,8 @@ import proj.bhtree.QuadNode;
 import edu.princeton.cs.algs4.StdDraw;
 import java.awt.Color;
 public class Cell {
+    static double wall_length = 0; // x-direction
+    static double wall_width = 0; // y-direction
     static double dt = 1.0/15.0;
     static double delta = 1.0/15.0;
     static int total_num = 0;
@@ -16,7 +18,6 @@ public class Cell {
     private double pos_x;
     private double pos_y;
     private int color_index;
-    private int last_color_index;
     private Color color;
     double perception_r;
     static final int RED = 0;
@@ -24,10 +25,12 @@ public class Cell {
     static final int BLUE = 2;
     static final int YELLOW = 3;
 
-    public Cell(double radius, double position_x, double position_y, Color color, double perception_radius){
+    public Cell(double radius, double position_x, double position_y, Color color, double perception_radius, double wall_x, double wall_y){
+        this.radius = radius;
+        this.wall_length = wall_x;
+        this.wall_width = wall_y;
         this.id = total_num;
         this.total_num += 1;
-        this.radius = radius;
         this.pos_x = position_x;
         this.pos_y = position_y;
         this.color = color;
@@ -39,10 +42,10 @@ public class Cell {
     }
 
     public Cell(Color color){
-        this(1, 0, 0, color, 1);
+        this(1, 0, 0, color, 1, wall_length, wall_width);
     }
     public Cell(){
-        this(1, 0, 0, Color.RED, 1);
+        this(1, 0, 0, Color.RED, 1, wall_length, wall_width);
     }
     public double distanceTo(Cell other){
         return Math.sqrt(Math.pow((this.pos_x - other.pos_x), 2.0) + Math.pow((this.pos_y - other.pos_y), 2.0));
@@ -60,8 +63,14 @@ public class Cell {
 
     }
 
-    public Boolean CellOverlap(Cell other){
+    public boolean Cell_NotOverlap(Cell other){
         return distanceTo(other) >= Math.pow((this.radius + other.radius), 2.0);
+    }
+    public boolean Cell_NotContactWall(){
+        return this.pos_x >= this.radius &&
+                this.wall_length - this.pos_x >= this.radius &&
+                this.pos_y >= this.radius &&
+                this.wall_width - this.pos_y >= radius;
     }
 
     public boolean in(QuadNode q) {
@@ -211,9 +220,8 @@ public class Cell {
             }
         }
     }
-
     public static void main(String[] args) {
-        Cell cell = new Cell(0.1,0.5,0,Color.RED, 10);
+        Cell cell = new Cell(0.1,0.5,0,Color.RED, 10,1,1);
         for(int i = 0; i<10; i++) {
             cell.move();
             cell.draw();

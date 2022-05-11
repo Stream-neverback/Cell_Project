@@ -69,7 +69,7 @@ public class BHTree {
             if(this.qNode.contains_rec(x_pos, y_pos, detection_half_length)){
                 if(cell.inDetection(this.cell)){
                     cell.add_num(this.cell);
-                    cell.check_color();
+//                    cell.check_color();
                 }
             }
         }
