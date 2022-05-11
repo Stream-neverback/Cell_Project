@@ -12,7 +12,7 @@ public class Cell {
     static double dt = 1.0 / 15.0;
     static double delta = 1.0 / 15.0;
     static int total_num = 0;
-    private double red_num = 0;
+    public double red_num = 0;
     private double green_num = 0;
     private double blue_num = 0;
     private double yellow_num = 0;
@@ -177,6 +177,39 @@ public class Cell {
         this.yellow_num += 1;
     }
 
+    public void reset_num(){
+        switch (this.getColorIndex()) {
+            case RED:
+                this.red_num = 1;
+                this.green_num = 0;
+                this.blue_num = 0;
+                this.yellow_num = 0;
+                break;
+
+            case GREEN:
+                this.red_num = 0;
+                this.green_num = 1;
+                this.blue_num = 0;
+                this.yellow_num = 0;
+                break;
+
+            case BLUE:
+                this.red_num = 0;
+                this.green_num = 0;
+                this.blue_num = 1;
+                this.yellow_num = 0;
+                break;
+
+            case YELLOW:
+                this.red_num = 0;
+                this.green_num = 0;
+                this.blue_num = 0;
+                this.yellow_num = 1;
+                break;
+            default:
+                break;
+        }
+    }
     public void add_num(Cell cell) {
         switch (cell.getColorIndex()) {
             case RED:

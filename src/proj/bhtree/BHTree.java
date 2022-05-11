@@ -62,32 +62,35 @@ public class BHTree {
     }
 
     public void checkDetection(Cell cell) {
-        System.out.println("check");
+//        System.out.println("check");
         double detection_half_length = cell.getPerception_r();
         double x_pos = cell.getX();
         double y_pos = cell.getY();
-        if (hasNoLeaf()){ // No subtree, no need to go on
-            System.out.println("True");
-            if(this.qNode.contains_rec(x_pos, y_pos, detection_half_length)){
-                if(cell.inDetection(this.cell)){
-                    cell.add_num(this.cell);
-                    cell.check_color();
+        if(this.cell != null) {
+            if (hasNoLeaf()) { // No subtree, no need to go on
+//            System.out.println("True");
+                if (this.qNode.contains_rec(x_pos, y_pos, detection_half_length)) {
+                    if (cell.inDetection(this.cell)) {
+                        cell.add_num(this.cell);
+                        System.out.println(cell.red_num);
+                        cell.check_color();
+                        cell.reset_num();
+                    }
                 }
+            } else {
+                if (this.qNode.contains_rec(x_pos, y_pos, detection_half_length)) {
+                    if (cell.inDetection(this.cell)) {
+//                    System.out.println("False");
+                        cell.add_num(this.cell);
+                        System.out.println(cell.red_num);
+                    }
+                }
+                this.nwChild.checkDetection(cell);
+                this.neChild.checkDetection(cell);
+                this.swChild.checkDetection(cell);
+                this.seChild.checkDetection(cell);
             }
         }
-        else{
-            if(this.qNode.contains_rec(x_pos, y_pos, detection_half_length)){
-                if(cell.inDetection(this.cell)){
-                    System.out.println("False");
-                    cell.add_num(this.cell);
-                }
-            }
-            this.nwChild.checkDetection(cell);
-            this.neChild.checkDetection(cell);
-            this.swChild.checkDetection(cell);
-            this.seChild.checkDetection(cell);
-        }
-
     }
     public static void searchNode(){
 

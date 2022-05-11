@@ -124,16 +124,16 @@ public class SimulationSystem {
 //                    QuadNode qNode = new QuadNode((range[0] + range[1]) / 2, (range[2] + range[3]) / 2,
 //                            (range[1] - range[0]), (range[3] - range[2]));
 //                    BHTree tree = new BHTree(qNode);
-                    Arrays.stream(cells).parallel()
-                            .filter(c -> c.in(qNode))
-                            .forEachOrdered(p -> {
-                                tree.insert(p);
-//                                p.move();
-                            });
-
-
-
-                    Arrays.stream(cells).parallel().forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
+//                    Arrays.stream(cells).parallel()
+//                            .filter(c -> c.in(qNode))
+//                            .forEachOrdered(p -> {
+//                                tree.insert(p);
+////                                p.move();
+//                            });
+//
+//
+//
+//                    Arrays.stream(cells).parallel().forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
                 }
                 StdDraw.show();
             } else {
