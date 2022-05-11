@@ -82,10 +82,10 @@ public class BHTree {
                     cell.add_num(this.cell);
                 }
             }
-            this.nwChild.qNode.contains_rec(x_pos, y_pos, detection_half_length);
-            this.neChild.qNode.contains_rec(x_pos, y_pos, detection_half_length);
-            this.swChild.qNode.contains_rec(x_pos, y_pos, detection_half_length);
-            this.seChild.qNode.contains_rec(x_pos, y_pos, detection_half_length);
+            this.nwChild.checkDetection(cell);
+            this.neChild.checkDetection(cell);
+            this.swChild.checkDetection(cell);
+            this.seChild.checkDetection(cell);
         }
 
     }
