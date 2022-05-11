@@ -1,11 +1,11 @@
-
+package proj;
 
 import edu.princeton.cs.algs4.StdDraw;
 import proj.bhtree.BHTree;
 import proj.Cell;
 import proj.Console;
 //import proj.oltree.OverlapTree;
-
+import proj.bhtree.QuadNode;
 import java.util.*;
 
 public class SimulationSystem {
@@ -19,6 +19,7 @@ public class SimulationSystem {
     public boolean noSpeedUpCollision=false;
     public boolean benchmark=false;
     public boolean isMouseMode=false;
+    public boolean isOutOfTime=false;
 
 
     static {
@@ -63,13 +64,6 @@ public class SimulationSystem {
             if(benchmark)
                 begin = System.nanoTime();
             if(noSpeedUp){
-//                Arrays.stream(cells).parallel().forEach(cell -> {
-//                    cell.clearGravity();
-//                    Arrays.stream(particles).parallel().forEach(particle::applyGravity);
-//                });
-//                if(hasCollision) {
-//                    Arrays.stream(particles).forEach(p -> p.collide(Arrays.asList(finalParticles)));
-//                }
             }
             else{
                 QuadNode qNode = new QuadNode((range[0]+range[1])/2, (range[2]+range[3])/2,
