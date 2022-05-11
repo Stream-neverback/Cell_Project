@@ -1,11 +1,10 @@
-package proj;
+
 
 import edu.princeton.cs.algs4.StdDraw;
 import proj.bhtree.BHTree;
 import proj.Cell;
 import proj.Console;
 //import proj.oltree.OverlapTree;
-import proj.bhtree.QuadNode;
 
 import java.util.*;
 
@@ -15,53 +14,44 @@ public class SimulationSystem {
     private Cell[] cells;
     private boolean isGUIMode;
     private double dt;
-    public boolean hasCollision = true;
-    public boolean detectionNeed=false;
-    public boolean noSpeedUp = false;
-    public boolean noSpeedUpCollision = false;
-    public boolean benchmark = false;
+    public boolean hasCollision=true;
+    public boolean noSpeedUp=false;
+    public boolean noSpeedUpCollision=false;
+    public boolean benchmark=false;
+    public boolean isMouseMode=false;
+
 
     static {
         instance = new SimulationSystem();
     }
 
-    private SimulationSystem() {
+    private SimulationSystem(){
 
     }
 
-    public static SimulationSystem getInstance() {
-        if (null == instance)
+    public static SimulationSystem getInstance(){
+        if(null == instance)
             instance = new SimulationSystem();
         return instance;
     }
 
-    public static boolean initialize(){
-        return true;
-    }
-
-    public void simulation(Console console, final double dt) {
+    public void simulation(Console console, final double dt){
         Cell[] cells = console.getCells();
         double[] range = console.getRange();
-        final boolean isGUIMode = !console.isTerminalMode();//default gui model
-
-
-
-
-//        final Cell[] finalCells = cells;
-        if (range.length == 1) {
+        final boolean isGUIMode = !console.isTerminalMode();
+        final Cell[] finalParticles = cells;
+        if(range.length==1){
             double a = range[0];
             range = new double[4];
-            range[0] = 0;
-            range[1] = a;
-            range[2] = 0;
-            range[3] = a;
+            range[0] = 0;  range[1] = a;
+            range[2] = 0;  range[3] = a;
         }
-        assert range.length == 4;
+        assert range.length==4;
         this.range = range;
         this.cells = cells;
         this.isGUIMode = isGUIMode;
         this.dt = dt;
-        if (isGUIMode) {
+        if(isGUIMode) {
             StdDraw.show();
             StdDraw.enableDoubleBuffering();
             StdDraw.setXscale(range[0], range[1]);
@@ -70,23 +60,27 @@ public class SimulationSystem {
         int cnt = 0;
         for (double t = 0.0; true; t = t + dt) {
             long begin = 0;
-            if (benchmark)
+            if(benchmark)
                 begin = System.nanoTime();
-            QuadNode qNode = new QuadNode((range[0] + range[1]) / 2, (range[2] + range[3]) / 2,
-                    Math.max((range[1] - range[0]), (range[3] - range[2])));
-            BHTree tree = new BHTree(qNode);
-            Arrays.stream(cells).parallel()
-                    .filter(p -> p.in(qNode))
-                    .forEachOrdered(p -> {
-                        tree.insert(p);
-                        p.check_color();
-
-                    });
-            tree.changeColor();
-
-            Arrays.stream(cells).parallel().forEach(cell -> {
-                cell.move();
-            });
+            if(noSpeedUp){
+//                Arrays.stream(cells).parallel().forEach(cell -> {
+//                    cell.clearGravity();
+//                    Arrays.stream(particles).parallel().forEach(particle::applyGravity);
+//                });
+//                if(hasCollision) {
+//                    Arrays.stream(particles).forEach(p -> p.collide(Arrays.asList(finalParticles)));
+//                }
+            }
+            else{
+                QuadNode qNode = new QuadNode((range[0]+range[1])/2, (range[2]+range[3])/2,
+                    Math.max((range[1]-range[0]), (range[3]-range[2])));
+                BHTree tree = new BHTree(qNode);
+                Arrays.stream(cells).parallel()
+                        .filter(c -> c.in(qNode))
+                        .forEachOrdered(tree::insert);
+                //                    particle.clearGravity();
+                //                    cell.check_color(dt);
+                Arrays.stream(cells).parallel().forEach(tree::checkDetection);
 //                if(hasCollision) {
 //                    if(!noSpeedUpCollision){
 //                        OverlapTree olTree = new OverlapTree(particles);
@@ -96,30 +90,44 @@ public class SimulationSystem {
 //                        Arrays.stream(particles).forEach(p -> p.collide(Arrays.asList(finalParticles)));
 //                    }
 //                }
-
-            if (benchmark) {
+            }
+            if(benchmark){
                 long end = System.nanoTime();
-                if (cnt % 10 == 0)
-                    System.err.println(String.format("%.3f", (end - begin) * 1e-3) + "us @" + cells.length + "\tparticles\tnoSpeedUp=" + noSpeedUp + "\tnoSpeedUpCollision=" + noSpeedUpCollision + "\thasCollision=" + hasCollision);
+                if(cnt%10==0)
+                    System.err.println(String.format("%.3f", (end-begin)*1e-3)+"us @"+cells.length+"\tparticles\tnoSpeedUp="+noSpeedUp+"\tnoSpeedUpCollision="+noSpeedUpCollision+"\thasCollision="+hasCollision);
                 cnt++;
             }
-            if (isGUIMode) {
+            if(isGUIMode) {
                 StdDraw.clear(StdDraw.BLACK);
-                Arrays.stream(cells).parallel().forEachOrdered(cell->{cell.draw();});
+                Arrays.stream(cells).parallel().forEachOrdered(Cell::draw);
+                if (isMouseMode && StdDraw.isMousePressed()) { // 创意：点击鼠标可以实现某些功能，比如点击一下窗口内如果刚好在某个cell范围内可以更改它的颜色
+                    double mouse_pressed_x = StdDraw.mouseX();
+                    double mouse_pressed_y = StdDraw.mouseY();
+                    // 在树里面寻找是否有这个cell
+                    QuadNode qNode = new QuadNode((range[0]+range[1])/2, (range[2]+range[3])/2,
+                            Math.max((range[1]-range[0]), (range[3]-range[2])));
+                    BHTree tree = new BHTree(qNode);
+                    Arrays.stream(cells).parallel()
+                            .filter(c -> c.in(qNode))
+                            .forEachOrdered(tree::insert);
+                    // Arrays.stream(cells).parallel().forEach(tree::checkDetection); 查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
+                }
                 StdDraw.show();
-            } else {
+            }
+            else{
 
-//                while (true) {
-//                    if (console.queue.size() == 0)
-//                        return;
-//                    Console.Pair<Double, Integer> pair = console.queue.get(0);
-//                    if (pair.key <= t) {
-//                        Cell c = cells[pair.value];
-//                        System.out.println(c);
-//                        console.queue.remove(0);
-//                    } else
-//                        break;
-//                }
+                while(true) {
+                    if(console.queue.size()==0)
+                        return;
+                    Console.Pair<Double, Integer> pair = console.queue.get(0);
+                    if(pair.key<=t){
+                        Cell c = cells[pair.value];
+                        System.out.println(c);
+                        console.queue.remove(0);
+                    }
+                    else
+                        break;
+                }
             }
         }
     }
