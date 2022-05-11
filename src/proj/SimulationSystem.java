@@ -1,9 +1,10 @@
-
+package proj;
 
 import edu.princeton.cs.algs4.StdDraw;
 import proj.bhtree.BHTree;
 import proj.Cell;
 import proj.Console;
+import proj.bhtree.QuadNode;
 //import proj.oltree.OverlapTree;
 
 import java.util.*;
@@ -18,7 +19,7 @@ public class SimulationSystem {
     public boolean noSpeedUp=false;
     public boolean noSpeedUpCollision=false;
     public boolean benchmark=false;
-
+    public boolean isMouseMode=false;
     static{
         instance = new SimulationSystem();
     }
@@ -70,17 +71,15 @@ public class SimulationSystem {
 //                }
             }
             else{
-                BHTree.QNode qNode = new BHTree.QNode((range[0]+range[1])/2, (range[2]+range[3])/2,
+                QuadNode qNode = new QuadNode((range[0]+range[1])/2, (range[2]+range[3])/2,
                     Math.max((range[1]-range[0]), (range[3]-range[2])));
                 BHTree tree = new BHTree(qNode);
                 Arrays.stream(cells).parallel()
-                        .filter(p -> p.in(qNode))
+                        .filter(c -> c.in(qNode))
                         .forEachOrdered(tree::insert);
-                Arrays.stream(cells).parallel().forEach(particle -> {
-//                    particle.clearGravity();
-                    tree.updateGravity(particle);
-                    particle.update(dt);
-                });
+                //                    particle.clearGravity();
+                //                    cell.check_color(dt);
+                Arrays.stream(cells).parallel().forEach(tree::checkDetection);
 //                if(hasCollision) {
 //                    if(!noSpeedUpCollision){
 //                        OverlapTree olTree = new OverlapTree(particles);
@@ -99,19 +98,30 @@ public class SimulationSystem {
             }
             if(isGUIMode) {
                 StdDraw.clear(StdDraw.BLACK);
-                Arrays.stream(cells).parallel().forEachOrdered(cells::draw);
+                Arrays.stream(cells).parallel().forEachOrdered(Cell::draw);
+                if (isMouseMode && StdDraw.isMousePressed()) { // 创意：点击鼠标可以实现某些功能，比如点击一下窗口内如果刚好在某个cell范围内可以更改它的颜色
+                    double mouse_pressed_x = StdDraw.mouseX();
+                    double mouse_pressed_y = StdDraw.mouseY();
+                    // 在树里面寻找是否有这个cell
+                    QuadNode qNode = new QuadNode((range[0]+range[1])/2, (range[2]+range[3])/2,
+                            Math.max((range[1]-range[0]), (range[3]-range[2])));
+                    BHTree tree = new BHTree(qNode);
+                    Arrays.stream(cells).parallel()
+                            .filter(c -> c.in(qNode))
+                            .forEachOrdered(tree::insert);
+                    // Arrays.stream(cells).parallel().forEach(tree::checkDetection); 查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
+                }
                 StdDraw.show();
             }
-            else{
-
+            else{ // terminal mode, 输出信息
                 while(true) {
                     if(console.queue.size()==0)
                         return;
                     Console.Pair<Double, Integer> pair = console.queue.get(0);
-                    if(pair.key<=t){
-                        Cell c = cells[pair.value];
+                    if(pair.key<=t){ // 当t第一次比pair.key大（因为时间不连续，则选取最小的而比pair.key大的时间来输出结果
+                        Cell c = cells[pair.value]; // 用序号来访问
                         System.out.println(c);
-                        console.queue.remove(0);
+                        console.queue.remove(0); // 输出后即可退出
                     }
                     else
                         break;
