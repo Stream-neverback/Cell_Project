@@ -12,14 +12,18 @@ public class Cell {
     static double dt = 1.0 / 15.0;
     static double delta = 1.0 / 15.0;
     static int total_num = 0;
-    public double red_num = 0;
+    private double red_num = 0;
     private double green_num = 0;
     private double blue_num = 0;
     private double yellow_num = 0;
-    int id;
+    public int id;
     private final double radius;
     private double pos_x;
     private double pos_y;
+    private double future_pos_x;
+    private double future_pos_y;
+
+    public boolean MOVE = true;
     private int color_index;
     private Color color;
     double perception_r;
@@ -60,10 +64,21 @@ public class Cell {
         this(1, 0, 0, Color.RED, 1);
     }
 
+    public void setMoveMode(boolean mode){
+        this.MOVE = mode;
+    }
+    public boolean getMoveMode(){
+        return this.MOVE;
+    }
     public double distanceTo(Cell other) {
         return Math.sqrt(Math.pow((this.pos_x - other.pos_x), 2.0) + Math.pow((this.pos_y - other.pos_y), 2.0));
     }
 
+    public double future_distanceTo(Cell other) {
+        this.future_move();
+        other.future_move();
+        return Math.sqrt(Math.pow((this.future_pos_x - other.pos_x), 2.0) + Math.pow((this.future_pos_y - other.pos_y), 2.0));
+    }
     public double x_distanceTo(Cell other) {
 //        System.out.println(other);
         return Math.abs(other.pos_x - this.pos_x);
@@ -79,8 +94,53 @@ public class Cell {
 
     }
 
-    public boolean Cell_NotOverlap(Cell other) {
-        return distanceTo(other) >= Math.pow((this.radius + other.radius), 2.0);
+    public void future_move(){
+        this.future_pos_x = this.pos_x;
+        this.future_pos_y = this.pos_y;
+        switch (this.color_index) {
+            case RED:
+                if (this.pos_y + delta < wall_length - this.radius) {
+                    this.future_pos_y = this.pos_y + delta;
+                } else {
+                    this.future_pos_y = wall_length - this.radius;
+                }
+                break;
+
+            case GREEN:
+                if (this.pos_y - delta > 0 + this.radius) {
+                    this.future_pos_y = this.pos_y - delta;
+                } else {
+                    this.future_pos_y = 0 + this.radius;
+                }
+                break;
+
+            case BLUE:
+                if (this.pos_x - delta > 0 + this.radius) {
+                    this.future_pos_x = this.pos_x - delta;
+                } else {
+                    this.future_pos_x = 0 + this.radius;
+                }
+                break;
+
+            case YELLOW:
+                if (this.pos_x + delta < wall_width - this.radius) {
+                    this.future_pos_x = this.pos_x + delta;
+                } else {
+                    this.future_pos_x = wall_width - this.radius;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    public double get_future_x(){
+        return this.future_pos_x;
+    }
+    public double get_future_y(){
+        return this.future_pos_y;
+    }
+    public boolean Cell_Overlap(Cell other) {
+        return future_distanceTo(other) <= this.radius + other.radius;
     }
 
     public boolean Cell_NotContactWall() {
@@ -97,33 +157,33 @@ public class Cell {
     public void move() {
         switch (this.color_index) {
             case RED:
-                if (this.pos_y + delta < wall_length - this.radius) {
+                if (this.pos_y + delta < wall_length - this.radius && this.MOVE) {
                     this.pos_y = this.pos_y + delta;
-                } else {
+                } else if (this.pos_y + delta >= wall_length - this.radius && this.MOVE){
                     this.pos_y = wall_length - this.radius;
                 }
                 break;
 
             case GREEN:
-                if (this.pos_y - delta > 0 + this.radius) {
+                if (this.pos_y - delta > 0 + this.radius && this.MOVE) {
                     this.pos_y = this.pos_y - delta;
-                } else {
+                } else if (this.pos_y - delta <= 0 + this.radius && this.MOVE) {
                     this.pos_y = 0 + this.radius;
                 }
                 break;
 
             case BLUE:
-                if (this.pos_x - delta > 0 + this.radius) {
+                if (this.pos_x - delta > 0 + this.radius && this.MOVE) {
                     this.pos_x = this.pos_x - delta;
-                } else {
+                } else if (this.pos_x - delta <= 0 + this.radius && this.MOVE) {
                     this.pos_x = 0 + this.radius;
                 }
                 break;
 
             case YELLOW:
-                if (this.pos_x + delta < wall_width - this.radius) {
+                if (this.pos_x + delta < wall_width - this.radius && this.MOVE) {
                     this.pos_x = this.pos_x + delta;
-                } else {
+                } else if (this.pos_x + delta >= wall_width - this.radius && this.MOVE) {
                     this.pos_x = wall_width - this.radius;
                 }
                 break;
@@ -132,6 +192,31 @@ public class Cell {
         }
     }
 
+    public void moveUntilContact(Cell cell) {
+        switch (this.color_index) {
+            case RED:
+                double y = Math.sqrt((this.radius + cell.radius) *  (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
+                this.pos_y = cell.pos_y - y;
+                break;
+
+            case GREEN:
+                y = Math.sqrt((this.radius + cell.radius) *  (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
+                this.pos_y = cell.pos_y + y;
+                break;
+
+            case BLUE:
+                double x = Math.sqrt((this.radius + cell.radius) *  (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
+                this.pos_x = cell.pos_x + x;
+                break;
+
+            case YELLOW:
+                x = Math.sqrt((this.radius + cell.radius) *  (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
+                this.pos_x = cell.pos_x - x;
+                break;
+            default:
+                break;
+        }
+    }
     public void draw() {
         StdDraw.setPenColor(this.color);
         StdDraw.filledCircle(this.pos_x, this.pos_y, this.radius);
@@ -242,14 +327,15 @@ public class Cell {
                 this.color_index = GREEN;
                 this.red_num -= 1;
                 this.green_num += 1;
+                this.MOVE = true;
             } else if (this.yellow_num >= 1 && this.yellow_num / sum_num < 0.1) {
                 this.color = Color.YELLOW;
                 this.color_index = YELLOW;
                 this.red_num -= 1;
                 this.yellow_num += 1;
+                this.MOVE = true;
             }
         }
-
         // check green
         if (this.color == Color.GREEN) {
             if (this.green_num >= 3 && this.green_num / sum_num > 0.7) {
@@ -257,26 +343,13 @@ public class Cell {
                 this.color_index = BLUE;
                 this.green_num -= 1;
                 this.blue_num += 1;
+                this.MOVE = true;
             } else if (this.red_num >= 1 && this.red_num / sum_num < 0.1) {
                 this.color = Color.RED;
                 this.color_index = RED;
                 this.green_num -= 1;
                 this.red_num += 1;
-            }
-        }
-
-        // check blue
-        if (this.color == Color.BLUE) {
-            if (this.blue_num >= 3 && this.blue_num / sum_num > 0.7) {
-                this.color = Color.YELLOW;
-                this.color_index = YELLOW;
-                this.blue_num -= 1;
-                this.yellow_num += 1;
-            } else if (this.green_num >= 1 && this.green_num / sum_num < 0.1) {
-                this.color = Color.GREEN;
-                this.color_index = GREEN;
-                this.blue_num -= 1;
-                this.green_num += 1;
+                this.MOVE = true;
             }
         }
         // check blue
@@ -286,11 +359,29 @@ public class Cell {
                 this.color_index = YELLOW;
                 this.blue_num -= 1;
                 this.yellow_num += 1;
+                this.MOVE = true;
             } else if (this.green_num >= 1 && this.green_num / sum_num < 0.1) {
                 this.color = Color.GREEN;
                 this.color_index = GREEN;
                 this.blue_num -= 1;
                 this.green_num += 1;
+                this.MOVE = true;
+            }
+        }
+        // check blue
+        if (this.color == Color.BLUE) {
+            if (this.blue_num >= 3 && this.blue_num / sum_num > 0.7) {
+                this.color = Color.YELLOW;
+                this.color_index = YELLOW;
+                this.blue_num -= 1;
+                this.yellow_num += 1;
+                this.MOVE = true;
+            } else if (this.green_num >= 1 && this.green_num / sum_num < 0.1) {
+                this.color = Color.GREEN;
+                this.color_index = GREEN;
+                this.blue_num -= 1;
+                this.green_num += 1;
+                this.MOVE = true;
             }
         }
 
@@ -301,11 +392,13 @@ public class Cell {
                 this.color_index = RED;
                 this.yellow_num -= 1;
                 this.red_num += 1;
+                this.MOVE = true;
             } else if (this.yellow_num >= 1 && this.yellow_num / sum_num < 0.1) {
                 this.color = Color.BLUE;
                 this.color_index = BLUE;
                 this.yellow_num -= 1;
                 this.blue_num += 1;
+                this.MOVE = true;
             }
         }
     }

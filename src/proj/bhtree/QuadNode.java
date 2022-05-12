@@ -52,6 +52,15 @@ public class QuadNode {
                 y <= this.y_center + halfLenY &&
                 y >= this.y_center - halfLenY);
     }
+
+    public boolean contains_circle(double x, double y, double r) {
+        double halfLenX = this.length_x / 2.0;
+        double halfLenY = this.length_y / 2.0;
+        return (x - r <= this.x_center + halfLenX &&
+                x + r >= this.x_center - halfLenX &&
+                y - r <= this.y_center + halfLenY &&
+                y + r >= this.y_center - halfLenY);
+    }
     public boolean contains_rec(double x, double y, double half_length) {
         double x_dis = Math.abs(x - this.x_center);
         double y_dis = Math.abs(y - this.y_center);

@@ -6,9 +6,9 @@ import proj.Cell;
 import proj.Console;
 //import proj.oltree.OverlapTree;
 import proj.bhtree.QuadNode;
-
 import java.awt.*;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 public class SimulationSystem {
     private static SimulationSystem instance;
@@ -111,12 +111,30 @@ public class SimulationSystem {
                         .filter(c -> c.in(qNode))
                         .forEachOrdered(p -> {
                             tree.insert(p);
+//                            tree.checkCollision(p);
+//                            System.out.println(p.getMoveMode());
+//                            System.out.printf("cell's y is %f\r\n", p.getY());
+//                            System.out.printf("cell's future_y is %f\r\n", p.get_future_y());
+//                            p.move();
+//                            tree.checkCollision(p);
+//                            System.out.println(p.getMoveMode());
+                        });
+                // OK
+                Arrays.stream(cells).filter(c -> c.in(qNode))
+                        .forEach(p -> {
+                            tree.checkCollision(p);
+                            System.out.println(p.getMoveMode());
+                            System.out.printf("cell's y is %f\r\n", p.getY());
+                            System.out.printf("cell's future_y is %f\r\n", p.get_future_y());
                             p.move();
+                            tree.checkCollision(p);
+                            System.out.println(p.getMoveMode());
                         });
 //                StdDraw.setPenColor(Color.RED);
 //                StdDraw.circle(0.5, 0.5, 0.2);
 //                StdDraw.filledCircle(4, 5, 1);
                 Arrays.stream(cells).parallel().forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
+                Arrays.stream(cells).filter(c -> c.in(qNode)).forEach(p -> {p.setMoveMode(true);});
                 if (isMouseMode && StdDraw.isMousePressed()) { // 创意：点击鼠标可以实现某些功能，比如点击一下窗口内如果刚好在某个cell范围内可以更改它的颜色
                     double mouse_pressed_x = StdDraw.mouseX();
                     double mouse_pressed_y = StdDraw.mouseY();
@@ -170,10 +188,10 @@ public class SimulationSystem {
     }
 
     public static void main(String[] args) {
-        String file_path = "./sample/sample2.txt";
+        String file_path = "./sample/sample1.txt";
         Console console = new Console("gui", file_path);
         SimulationSystem s = new SimulationSystem();
-        s.simulation(console, 0.15);
+        s.simulation(console, 1.0/15.0);
     }
 
 }

@@ -61,6 +61,41 @@ public class BHTree {
         return (nwChild == null && neChild == null && swChild == null && seChild == null);
     }
 
+    public void checkCollision(Cell cell){
+        double x_pos = cell.getX();
+        double y_pos = cell.getY();
+        double radius = cell.getRadius();
+        cell.future_move();
+        if(cell.getMoveMode()) {
+            if (this.cell != null) {
+                if (hasNoLeaf()) { // No subtree, no need to go on
+//            System.out.println("True");
+                    if (this.qNode.contains_circle(cell.get_future_x(), cell.get_future_y(), radius)) {
+                        if (cell.Cell_Overlap(this.cell) && this.cell.id != cell.id) {
+                            cell.setMoveMode(false);
+                            cell.moveUntilContact(this.cell);
+//                            this.cell.setMoveMode(false);
+                        }
+                    }
+//                    System.out.printf("distance is %f\r\n", cell.future_distanceTo(this.cell));
+                } else {
+                    if (this.qNode.contains_circle(cell.get_future_x(), cell.get_future_y(), radius)) {
+                        if (cell.Cell_Overlap(this.cell) && this.cell.id != cell.id) {
+                            cell.setMoveMode(false);
+                            cell.moveUntilContact(this.cell);
+//                            this.cell.setMoveMode(false);
+                        }
+                    }
+//                    System.out.printf("distance is %f\r\n", cell.future_distanceTo(this.cell));
+                    this.nwChild.checkCollision(cell);
+                    this.neChild.checkCollision(cell);
+                    this.swChild.checkCollision(cell);
+                    this.seChild.checkCollision(cell);
+                }
+            }
+        }
+    }
+
     public void checkDetection(Cell cell) {
 //        System.out.println("check");
         double detection_half_length = cell.getPerception_r();
@@ -70,19 +105,19 @@ public class BHTree {
             if (hasNoLeaf()) { // No subtree, no need to go on
 //            System.out.println("True");
                 if (this.qNode.contains_rec(x_pos, y_pos, detection_half_length)) {
-                    if (cell.inDetection(this.cell)) {
+                    if (cell.inDetection(this.cell) && this.cell.id != cell.id) {
                         cell.add_num(this.cell);
-                        System.out.println(cell.red_num);
+//                        System.out.println(cell.red_num);
                         cell.check_color();
                         cell.reset_num();
                     }
                 }
             } else {
                 if (this.qNode.contains_rec(x_pos, y_pos, detection_half_length)) {
-                    if (cell.inDetection(this.cell)) {
+                    if (cell.inDetection(this.cell) && this.cell.id != cell.id) {
 //                    System.out.println("False");
                         cell.add_num(this.cell);
-                        System.out.println(cell.red_num);
+//                        System.out.println(cell.red_num);
                     }
                 }
                 this.nwChild.checkDetection(cell);
