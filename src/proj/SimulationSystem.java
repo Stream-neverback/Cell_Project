@@ -61,7 +61,7 @@ public class SimulationSystem {
             StdDraw.show();
             StdDraw.enableDoubleBuffering();
             double ratio = range[3]/range[1];
-            int canvasWidth = 400;
+            int canvasWidth = 600;
             int canvasHeight = (int) ((double) canvasWidth * ratio);
 //            System.out.println(canvasWidth + " " + canvasHeight);
             StdDraw.setCanvasSize(canvasWidth, canvasHeight);
@@ -136,6 +136,15 @@ public class SimulationSystem {
 //                                System.out.println(p.getX());
 //                            }
                         });
+//                Arrays.stream(cells)
+////                        .filter(c -> c.in(qNode))
+//                        .forEach(p -> {
+////                            tree.checkCollision(p);
+////                            System.out.println(p.getMoveMode());
+//                            System.out.printf("cell's y is %f\r\n", p.getY());
+////                            System.out.printf("cell's future_y is %f\r\n", p.get_future_y());
+////                            }
+//                        });
 
 //                Arrays.stream(cells).filter(c -> c.in(qNode))
 //                        .forEach(p -> {
@@ -218,7 +227,7 @@ public class SimulationSystem {
 
     public static void main(String[] args) {
 //        String file_path = "./sample/sample/sample2.txt";
-        String file_path = "./sample/sample/sample3.txt";
+        String file_path = "./sample/sample/sample2.txt";
         Console console = new Console("gui", file_path);
         SimulationSystem s = new SimulationSystem();
         s.simulation(console, 1.0/15.0);

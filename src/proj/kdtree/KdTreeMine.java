@@ -26,7 +26,7 @@ public class KdTreeMine {
         rangeXMax = xmax;
         rangeYMin = ymin;
         rangeYMax = ymax;
-        collisionRange = largestRadius + 2 / 15;
+        collisionRange = largestRadius * 2 + 2 / 15;
         size = 0;
     }
 
@@ -448,7 +448,7 @@ public class KdTreeMine {
             return;
         }
         for (Cell cell1 : cellsInRange) {
-            if (cell.Cell_Overlap(cell1)) {
+            if (cell.Cell_Overlap(cell1) && cell.id != cell1.id) {
                 cellsListOverlap.add(cell1);
 //                    cell.setMoveMode(false);
 //                    cell.moveUntilContact(cell1);
@@ -466,9 +466,12 @@ public class KdTreeMine {
         Cell cellMinDistance = cellsListOverlap.get(distanceList.indexOf(Collections.min(distanceList)));
 //        System.out.println(cell.getY() + " go to " + cellMinDistance.getY());
         cell.setMoveMode(false);
+        cellMinDistance.setMoveMode(false);
         if(cell.id != cellMinDistance.id){
             cell.moveUntilContact(cellMinDistance);
         }
+//        cell.setMoveMode(false);
+//        cellMinDistance.setMoveMode(false);
 
     }
 
