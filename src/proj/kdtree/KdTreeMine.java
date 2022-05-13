@@ -9,11 +9,19 @@ import java.awt.*;
 public class KdTreeMine {
     private Node root;
     private int size;
+    private double rangeXMin;
+    private double rangeXMax;
+    private double rangeYMin;
+    private double rangeYMax;
 
     /**
      * Construct an empty set of points.
      */
-    public KdTreeMine() {
+    public KdTreeMine(double xmin,double ymin, double xmax, double ymax) {
+        rangeXMin=xmin;
+        rangeXMax=xmax;
+        rangeYMin=ymin;
+        rangeYMax=ymax;
         size = 0;
     }
 
@@ -81,7 +89,7 @@ public class KdTreeMine {
                 "called insert() with a null Cell");
 
         // new double[] {x_min, y_min, x_max, y_max)
-        root = insert(root, p, true, new double[] {0, 0, 1, 1});
+        root = insert(root, p, true, new double[] {rangeXMin, rangeYMin, rangeXMax, rangeYMax});
     }
 
     private Node insert(Node n, Cell p, boolean evenLevel, double[] coords) {
@@ -409,12 +417,31 @@ public class KdTreeMine {
         }
     }
 
+
+    public void checkDetection(Cell cell){//隐患 若x,y超出边界可能有问题
+        double xmin = cell.getX()-cell.getPerception_r();
+        double xmax = cell.getX()+cell.getPerception_r();
+        double ymin = cell.getY()-cell.getPerception_r();
+        double ymax = cell.getY()+cell.getPerception_r();
+
+        Iterable<Cell> cellsInRange = this.range(new RectHV(xmin,ymin,xmax,ymax));
+        if(cellsInRange!=null){
+            for(Cell cell1:cellsInRange){
+                cell.add_num(cell1);
+            }
+
+        }
+    }
+
+
+
+
     /**
      * Unit testing of the methods (optional).
      * @param args
      */
     public static void main(String[] args) {
-        KdTreeMine kdtree = new KdTreeMine();
+        KdTreeMine kdtree = new KdTreeMine(0,0,1,1);
         Cell p = new Cell(0.1, 0.5, 0, Color.RED, 10);
         kdtree.insert(p);
         StdOut.println(kdtree.contains(p));
