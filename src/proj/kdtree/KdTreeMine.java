@@ -1,10 +1,13 @@
 package proj.kdtree;
+
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 import proj.Cell;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class KdTreeMine {
     private Node root;
@@ -13,29 +16,31 @@ public class KdTreeMine {
     private double rangeXMax;
     private double rangeYMin;
     private double rangeYMax;
+    private double collisionRange;
 
     /**
      * Construct an empty set of points.
      */
-    public KdTreeMine(double xmin,double ymin, double xmax, double ymax) {
-        rangeXMin=xmin;
-        rangeXMax=xmax;
-        rangeYMin=ymin;
-        rangeYMax=ymax;
+    public KdTreeMine(double xmin, double ymin, double xmax, double ymax, double largestRadius) {
+        rangeXMin = xmin;
+        rangeXMax = xmax;
+        rangeYMin = ymin;
+        rangeYMax = ymax;
+        collisionRange = largestRadius + 2 / 15;
         size = 0;
     }
 
     /**
      * Is the set empty?
-     *
+     * <p>
      * Note that, while the Nodes in BST store their sizes, that is not done
      * in this implementation.
-     *
+     * <p>
      * Accordingly, this simplifies the code from a call to a private helper
      * size method to a check of whether or not the root node is null.
      *
      * @return {@code true} if this set is empty;
-     *         {@code false} otherwise
+     * {@code false} otherwise
      */
     public boolean isEmpty() {
         return root == null;
@@ -50,36 +55,35 @@ public class KdTreeMine {
 
     /**
      * Add the point to the set (if it is not already in the set).
-     *
+     * <p>
      * At the root (and every second level thereafter), the x-coordinate is
      * used as the key.
-     *
+     * <p>
      * This means that if (0.7, 0.2) is the root, then (0.5, 0.9) will be
      * added to the left, since its x-coordinate is smaller than the
      * x-coordinate of the root node.  Similarly, if the next point to be
      * added is (0.8, 0.1), that point will be added to the right of root,
      * since its x-coordinate is larger than the x-coordinate of the root node.
-     *
+     * <p>
      * So, visually, we would have:
-     *       (0.7, 0.2)
-     *      /          \
+     * (0.7, 0.2)
+     * /          \
      * (0.5, 0.9)   (0.8, 0.1)
-     *
-     *
+     * <p>
+     * <p>
      * At one level below the root (and every second level thereafter), the
      * y-coordinate is used as the key.
-     *
+     * <p>
      * This means that if we next add (0.6, 0.8), it will be added to the left
      * of (0.5, 0.9).  Similarly, if we next add (0.4, 0.95), it will be added
      * to the right of (0.5, 0.9).
-     *
+     * <p>
      * So, visually, we would have:
-     *              (0.7, 0.2)
-     *             /          \
-     *        (0.5, 0.9)   (0.8, 0.1)
-     *       /          \
+     * (0.7, 0.2)
+     * /          \
+     * (0.5, 0.9)   (0.8, 0.1)
+     * /          \
      * (0.6, 0.8)   (0.4, 0.95)
-     *
      *
      * @param p the point to add
      * @throws NullPointerException if {@code p} is {@code null}
@@ -89,7 +93,7 @@ public class KdTreeMine {
                 "called insert() with a null Cell");
 
         // new double[] {x_min, y_min, x_max, y_max)
-        root = insert(root, p, true, new double[] {rangeXMin, rangeYMin, rangeXMax, rangeYMax});
+        root = insert(root, p, true, new double[]{rangeXMin, rangeYMin, rangeXMax, rangeYMax});
     }
 
     private Node insert(Node n, Cell p, boolean evenLevel, double[] coords) {
@@ -164,13 +168,13 @@ public class KdTreeMine {
 
     /**
      * Does the set contain point p?
-     *
+     * <p>
      * In the worst case, this implementation takes time proportional to the
      * logarithm of the number of points in the set.
      *
      * @param p the point to look for
      * @return {@code true} if the set contains point p;
-     *         {@code false} otherwise
+     * {@code false} otherwise
      * @throws NullPointerException if {@code p} is {@code null}
      */
     public boolean contains(Cell p) {
@@ -219,8 +223,7 @@ public class KdTreeMine {
         if (evenLevel) {
             StdDraw.setPenColor(StdDraw.RED);
             StdDraw.line(n.p.getX(), n.rect.ymin(), n.p.getX(), n.rect.ymax());
-        }
-        else {
+        } else {
             StdDraw.setPenColor(StdDraw.BLUE);
             StdDraw.line(n.rect.xmin(), n.p.getY(), n.rect.xmax(), n.p.getY());
         }
@@ -231,10 +234,10 @@ public class KdTreeMine {
 
     /**
      * All points that are inside the rectangle.
-     *
+     * <p>
      * In the worst case, this implementation takes time
      * proportional to the number of points in the set.
-     *
+     * <p>
      * However, unlike PointSET.range(), in the best case, this implementation
      * takes time proportional to the logarithm of the number of
      * points in the set.
@@ -280,20 +283,19 @@ public class KdTreeMine {
     }
 
 
-
     /**
      * A nearest neighbor in the set to point p; null if the set is empty.
-     *
+     * <p>
      * In the worst case, this implementation takes time
      * proportional to the number of points in the set.
-     *
+     * <p>
      * However, unlike PointSET.nearest(), in the best case, this
      * implementation takes time proportional to the logarithm of
      * the number of points in the set.
      *
      * @param p the point from which to search for a neighbor
      * @return the nearest neighbor to the given point p,
-     *         {@code null} otherwise.
+     * {@code null} otherwise.
      * @throws NullPointerException if {@code p} is {@code null}
      */
     public Cell nearest(Cell p) {
@@ -304,7 +306,7 @@ public class KdTreeMine {
     }
 
     private Cell nearest(Node n, Cell p, Cell champion,
-                            boolean evenLevel) {
+                         boolean evenLevel) {
 
         // Handle reaching the end of the tree
         if (n == null) return champion;
@@ -372,26 +374,25 @@ public class KdTreeMine {
     /**
      * The distance and direction from the given point to the given Node's
      * partition line.
-     *
+     * <p>
      * If the sign of the returned double is negative, then the given point
      * lies or should lie on the left branch of the given Node.
-     *
+     * <p>
      * Otherwise (including where the difference is exactly 0), then the
      * given point lies or should lie on the right branch of the given Node.
      *
-     * @param p the point in question
-     * @param n the Node in question
+     * @param p         the point in question
+     * @param n         the Node in question
      * @param evenLevel is the current level even?  If so, then the Node's
-     *        partition line is vertical, so the point will be to the left
-     *        or right of the Node.  If not, then the Node's partition line
-     *        is horizontal, so the point will be above or below the Node.
+     *                  partition line is vertical, so the point will be to the left
+     *                  or right of the Node.  If not, then the Node's partition line
+     *                  is horizontal, so the point will be above or below the Node.
      * @return the distance and direction from p to n's partition line
      */
     private double comparePoints(Cell p, Node n, boolean evenLevel) {
         if (evenLevel) {
             return p.getX() - n.p.getX();
-        }
-        else return p.getY() - n.p.getY();
+        } else return p.getY() - n.p.getY();
     }
 
     /**
@@ -418,33 +419,67 @@ public class KdTreeMine {
     }
 
 
-    public void checkDetection(Cell cell){//隐患 若x,y超出边界可能有问题
-        double xmin = cell.getX()-cell.getPerception_r();
-        double xmax = cell.getX()+cell.getPerception_r();
-        double ymin = cell.getY()-cell.getPerception_r();
-        double ymax = cell.getY()+cell.getPerception_r();
+    public void checkDetection(Cell cell) {//隐患 若x,y超出边界可能有问题
+        double xmin = cell.getX() - cell.getPerception_r();
+        double xmax = cell.getX() + cell.getPerception_r();
+        double ymin = cell.getY() - cell.getPerception_r();
+        double ymax = cell.getY() + cell.getPerception_r();
 
-        Iterable<Cell> cellsInRange = this.range(new RectHV(xmin,ymin,xmax,ymax));
-        if(cellsInRange!=null){
-            for(Cell cell1:cellsInRange){
+        Iterable<Cell> cellsInRange = this.range(new RectHV(xmin, ymin, xmax, ymax));
+        if (cellsInRange != null) {
+            for (Cell cell1 : cellsInRange) {
                 cell.add_num(cell1);
             }
 
         }
     }
 
+    public void checkCollision(Cell cell) {
+        cell.setMoveMode(true);
+        double xmin = cell.getX() - collisionRange;
+        double xmax = cell.getX() + collisionRange;
+        double ymin = cell.getY() - collisionRange;
+        double ymax = cell.getY() + collisionRange;
+        Iterable<Cell> cellsInRange = this.range(new RectHV(xmin, ymin, xmax, ymax));
+        ArrayList<Cell> cellsListOverlap = new ArrayList<>();
+        if (cellsInRange == null) {
+            return;
+        }
+        for (Cell cell1 : cellsInRange) {
+            if (cell.Cell_Overlap(cell1)) {
+                cellsListOverlap.add(cell1);
+//                    cell.setMoveMode(false);
+//                    cell.moveUntilContact(cell1);
+//                    return;
+            }
 
+        }
+        if (cellsListOverlap.size() == 0) {
+            return;
+        }
+        ArrayList<Double> distanceList = new ArrayList<>();
+        for (Cell cell2 : cellsListOverlap) {
+            distanceList.add(cell.future_distanceTo(cell2) - cell.getRadius() - cell2.getRadius());
+        }
+        Cell cellMinDistance = cellsListOverlap.get(distanceList.indexOf(Collections.min(distanceList)));
+        cell.setMoveMode(false);
+        cell.moveUntilContact(cellMinDistance);
+
+
+    }
 
 
     /**
      * Unit testing of the methods (optional).
+     *
      * @param args
      */
     public static void main(String[] args) {
-        KdTreeMine kdtree = new KdTreeMine(0,0,1,1);
+        KdTreeMine kdtree = new KdTreeMine(0, 0, 1, 1,1);
         Cell p = new Cell(0.1, 0.5, 0, Color.RED, 10);
         kdtree.insert(p);
         StdOut.println(kdtree.contains(p));
     }
 }
+
 
