@@ -47,13 +47,9 @@ public class Cell {
         this.pos_y = position_y;
         this.color = color;
         if (this.color == Color.RED) this.color_index = RED;
-        red_num = 1;
         if (this.color == Color.GREEN) this.color_index = GREEN;
-        green_num = 1;
         if (this.color == Color.BLUE) this.color_index = BLUE;
-        blue_num = 1;
         if (this.color == Color.YELLOW) this.color_index = YELLOW;
-        yellow_num = 1;
         this.perception_r = perception_radius;
     }
 
@@ -91,7 +87,7 @@ public class Cell {
 
     public boolean inDetection(Cell other) {
         return (this.x_distanceTo(other) <= this.perception_r &&
-                this.y_distanceTo(other) <= this.perception_r);
+                this.y_distanceTo(other) <= this.perception_r );
 
     }
 
@@ -154,7 +150,13 @@ public class Cell {
     public boolean in(QuadNode q) {
         return q.contains(this.pos_x, this.pos_y);
     }
-
+    public boolean isOut(){
+        if (pos_x + radius > wall_width || pos_y + radius > wall_length || pos_x - radius < 0 || pos_y - radius < 0) {
+            System.out.println("Out! " + (pos_x) + " " + pos_y);
+            return true;
+        }
+        return false;
+    }
     public void move() {
         switch (this.color_index) {
             case RED:
@@ -163,6 +165,10 @@ public class Cell {
                 } else if (this.pos_y + delta >= wall_length - this.radius && this.MOVE){
                     this.pos_y = wall_length - this.radius;
                 }
+                if(isOut()){System.out.println("11111111111111111111111111111111111111111111111111");
+                    System.out.println(this.color);
+                    System.out.println(this.color_index);
+                    System.out.println(this.MOVE);}
                 break;
 
             case GREEN:
@@ -171,6 +177,10 @@ public class Cell {
                 } else if (this.pos_y - delta <= 0 + this.radius && this.MOVE) {
                     this.pos_y = 0 + this.radius;
                 }
+                if(isOut()){System.out.println("11111111111111111111111111111111111111111111111111");
+                    System.out.println(this.color);
+                    System.out.println(this.color_index);
+                    System.out.println(this.MOVE);}
                 break;
 
             case BLUE:
@@ -179,11 +189,10 @@ public class Cell {
                 } else if (this.pos_x - delta <= 0 + this.radius && this.MOVE) {
                     this.pos_x = 0 + this.radius;
                 }
-                if(this.pos_x > 80){System.out.println("11111111111111111111111111111111111111111111111111");
+                if(isOut()){System.out.println("11111111111111111111111111111111111111111111111111");
                     System.out.println(this.color);
                     System.out.println(this.color_index);
-                    System.out.println(this.MOVE);
-                }
+                    System.out.println(this.MOVE);}
                 break;
 
             case YELLOW:
@@ -192,11 +201,10 @@ public class Cell {
                 } else if (this.pos_x + delta >= wall_width - this.radius && this.MOVE) {
                     this.pos_x = wall_width - this.radius;
                 }
-                if(this.pos_x > 80){System.out.println("11111111111111111111111111111111111111111111111111");
+                if(isOut()){System.out.println("11111111111111111111111111111111111111111111111111");
                     System.out.println(this.color);
                     System.out.println(this.color_index);
-                    System.out.println(this.MOVE);
-                }
+                    System.out.println(this.MOVE);}
                 break;
             default:
                 break;
@@ -206,24 +214,32 @@ public class Cell {
     public void moveUntilContact(Cell cell) {
         switch (this.color_index) {
             case RED:
-                double y = Math.sqrt((this.radius + cell.radius) *  (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
-                this.pos_y = cell.pos_y - y;
+                if (this.pos_y + delta < wall_length - this.radius) {
+                    double y = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
+                    this.pos_y = cell.pos_y - y;
+                }
                 break;
 
             case GREEN:
-                y = Math.sqrt((this.radius + cell.radius) *  (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
-                this.pos_y = cell.pos_y + y;
+                if (this.pos_y - delta > 0 + this.radius) {
+                    double y = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
+                    this.pos_y = cell.pos_y + y;
+                }
                 break;
 
             case BLUE:
-                double x = Math.sqrt((this.radius + cell.radius) *  (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
-                this.pos_x = cell.pos_x + x;
+                if (this.pos_x - delta > 0 + this.radius) {
+                    double x = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
+                    this.pos_x = cell.pos_x + x;
+                }
                 break;
 
             case YELLOW:
-                x = Math.sqrt((this.radius + cell.radius) *  (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
-                this.pos_x = cell.pos_x - x;
-                break;
+                if (this.pos_x + delta <  wall_width - this.radius) {
+                    double x = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
+                    this.pos_x = cell.pos_x - x;
+                    break;
+                }
             default:
                 break;
         }
@@ -286,37 +302,10 @@ public class Cell {
     }
 
     public void reset_num(){
-        switch (this.getColorIndex()) {
-            case RED:
-                this.red_num = 1;
-                this.green_num = 0;
-                this.blue_num = 0;
-                this.yellow_num = 0;
-                break;
-
-            case GREEN:
-                this.red_num = 0;
-                this.green_num = 1;
-                this.blue_num = 0;
-                this.yellow_num = 0;
-                break;
-
-            case BLUE:
-                this.red_num = 0;
-                this.green_num = 0;
-                this.blue_num = 1;
-                this.yellow_num = 0;
-                break;
-
-            case YELLOW:
-                this.red_num = 0;
-                this.green_num = 0;
-                this.blue_num = 0;
-                this.yellow_num = 1;
-                break;
-            default:
-                break;
-        }
+        this.red_num = 0;
+        this.green_num = 0;
+        this.blue_num = 0;
+        this.yellow_num = 0;
     }
     public void add_num(Cell cell) {
         switch (cell.getColorIndex()) {
@@ -347,30 +336,35 @@ public class Cell {
             if (this.red_num >= 3 && this.red_num / sum_num > 0.7) {
                 this.color = Color.GREEN;
                 this.color_index = GREEN;
-                this.red_num -= 1;
-                this.green_num += 1;
+//                this.red_num -= 1;
+//                this.green_num += 1;
                 this.MOVE = true;
             } else if (this.yellow_num >= 1 && this.yellow_num / sum_num < 0.1) {
                 this.color = Color.YELLOW;
                 this.color_index = YELLOW;
-                this.red_num -= 1;
-                this.yellow_num += 1;
+//                this.red_num -= 1;
+//                this.yellow_num += 1;
                 this.MOVE = true;
             }
         }
         // check green
         if (this.color == Color.GREEN) {
+            System.out.printf("red is %f\r\n", this.red_num);
+            System.out.printf("green is %f\r\n", this.green_num);
+            System.out.printf("yellow is %f\r\n", this.yellow_num);
+            System.out.printf("blue is %f\r\n", this.blue_num);
+            System.out.printf("x is %f, y is %f\r\n", this.pos_x,this.pos_y);
             if (this.green_num >= 3 && this.green_num / sum_num > 0.7) {
                 this.color = Color.BLUE;
                 this.color_index = BLUE;
-                this.green_num -= 1;
-                this.blue_num += 1;
+//                this.green_num -= 1;
+//                this.blue_num += 1;
                 this.MOVE = true;
             } else if (this.red_num >= 1 && this.red_num / sum_num < 0.1) {
                 this.color = Color.RED;
                 this.color_index = RED;
-                this.green_num -= 1;
-                this.red_num += 1;
+//                this.green_num -= 1;
+//                this.red_num += 1;
                 this.MOVE = true;
             }
         }
@@ -379,14 +373,14 @@ public class Cell {
             if (this.blue_num >= 3 && this.blue_num / sum_num > 0.7) {
                 this.color = Color.YELLOW;
                 this.color_index = YELLOW;
-                this.blue_num -= 1;
-                this.yellow_num += 1;
+//                this.blue_num -= 1;
+//                this.yellow_num += 1;
                 this.MOVE = true;
             } else if (this.green_num >= 1 && this.green_num / sum_num < 0.1) {
                 this.color = Color.GREEN;
                 this.color_index = GREEN;
-                this.blue_num -= 1;
-                this.green_num += 1;
+//                this.blue_num -= 1;
+//                this.green_num += 1;
                 this.MOVE = true;
             }
         }
@@ -395,14 +389,14 @@ public class Cell {
             if (this.blue_num >= 3 && this.blue_num / sum_num > 0.7) {
                 this.color = Color.YELLOW;
                 this.color_index = YELLOW;
-                this.blue_num -= 1;
-                this.yellow_num += 1;
+//                this.blue_num -= 1;
+//                this.yellow_num += 1;
                 this.MOVE = true;
             } else if (this.green_num >= 1 && this.green_num / sum_num < 0.1) {
                 this.color = Color.GREEN;
                 this.color_index = GREEN;
-                this.blue_num -= 1;
-                this.green_num += 1;
+//                this.blue_num -= 1;
+//                this.green_num += 1;
                 this.MOVE = true;
             }
         }
@@ -412,14 +406,14 @@ public class Cell {
             if (this.yellow_num >= 3 && this.yellow_num / sum_num > 0.7) {
                 this.color = Color.RED;
                 this.color_index = RED;
-                this.yellow_num -= 1;
-                this.red_num += 1;
+//                this.yellow_num -= 1;
+//                this.red_num += 1;
                 this.MOVE = true;
             } else if (this.yellow_num >= 1 && this.yellow_num / sum_num < 0.1) {
                 this.color = Color.BLUE;
                 this.color_index = BLUE;
-                this.yellow_num -= 1;
-                this.blue_num += 1;
+//                this.yellow_num -= 1;
+//                this.blue_num += 1;
                 this.MOVE = true;
             }
         }

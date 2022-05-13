@@ -146,7 +146,7 @@ public class SimulationSystem {
 //                StdDraw.filledCircle(4, 5, 1);
                 Arrays.stream(cells).forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
                 Arrays.stream(cells).forEach(p -> {p.check_color();});
-                Arrays.stream(cells).forEach(p -> {p.reset_num();});
+                Arrays.stream(cells).forEachOrdered(p -> {p.reset_num();});
                 Arrays.stream(cells).filter(c -> c.in(qNode)).forEach(p -> {p.setMoveMode(true);});
                 if (isMouseMode && StdDraw.isMousePressed()) { // 创意：点击鼠标可以实现某些功能，比如点击一下窗口内如果刚好在某个cell范围内可以更改它的颜色
                     double mouse_pressed_x = StdDraw.mouseX();
@@ -209,7 +209,8 @@ public class SimulationSystem {
     }
 
     public static void main(String[] args) {
-        String file_path = "./sample/sample2.txt";
+//        String file_path = "./sample/sample/sample2.txt";
+        String file_path = "./sample/sample/sample2.txt";
         Console console = new Console("gui", file_path);
         SimulationSystem s = new SimulationSystem();
         s.simulation(console, 1.0/15.0);
