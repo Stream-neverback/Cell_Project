@@ -46,14 +46,10 @@ public class Cell {
         this.pos_x = position_x;
         this.pos_y = position_y;
         this.color = color;
-//        if (this.color == Color.RED) this.color_index = RED;
-//        red_num = 1;
-//        if (this.color == Color.GREEN) this.color_index = GREEN;
-//        green_num = 1;
-//        if (this.color == Color.BLUE) this.color_index = BLUE;
-//        blue_num = 1;
-//        if (this.color == Color.YELLOW) this.color_index = YELLOW;
-//        yellow_num = 1;
+        if (this.color == Color.RED) this.color_index = RED;
+        if (this.color == Color.GREEN) this.color_index = GREEN;
+        if (this.color == Color.BLUE) this.color_index = BLUE;
+        if (this.color == Color.YELLOW) this.color_index = YELLOW;
         this.perception_r = perception_radius;
     }
 
@@ -306,37 +302,10 @@ public class Cell {
     }
 
     public void reset_num(){
-        switch (this.getColorIndex()) {
-            case RED:
-                this.red_num = 0;
-                this.green_num = 0;
-                this.blue_num = 0;
-                this.yellow_num = 0;
-                break;
-
-            case GREEN:
-                this.red_num = 0;
-                this.green_num = 0;
-                this.blue_num = 0;
-                this.yellow_num = 0;
-                break;
-
-            case BLUE:
-                this.red_num = 0;
-                this.green_num = 0;
-                this.blue_num = 0;
-                this.yellow_num = 0;
-                break;
-
-            case YELLOW:
-                this.red_num = 0;
-                this.green_num = 0;
-                this.blue_num = 0;
-                this.yellow_num = 0;
-                break;
-            default:
-                break;
-        }
+        this.red_num = 0;
+        this.green_num = 0;
+        this.blue_num = 0;
+        this.yellow_num = 0;
     }
     public void add_num(Cell cell) {
         switch (cell.getColorIndex()) {
@@ -380,7 +349,11 @@ public class Cell {
         }
         // check green
         if (this.color == Color.GREEN) {
-            System.out.println(this.green_num);
+            System.out.printf("red is %f\r\n", this.red_num);
+            System.out.printf("green is %f\r\n", this.green_num);
+            System.out.printf("yellow is %f\r\n", this.yellow_num);
+            System.out.printf("blue is %f\r\n", this.blue_num);
+            System.out.printf("x is %f, y is %f\r\n", this.pos_x,this.pos_y);
             if (this.green_num >= 3 && this.green_num / sum_num > 0.7) {
                 this.color = Color.BLUE;
                 this.color_index = BLUE;
