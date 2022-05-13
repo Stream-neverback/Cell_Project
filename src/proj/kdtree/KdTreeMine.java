@@ -428,7 +428,9 @@ public class KdTreeMine {
         Iterable<Cell> cellsInRange = this.range(new RectHV(xmin, ymin, xmax, ymax));
         if (cellsInRange != null) {
             for (Cell cell1 : cellsInRange) {
-                cell.add_num(cell1);
+                if(cell.id != cell1.id ) {
+                    cell.add_num(cell1);
+                }
             }
 
         }
@@ -462,9 +464,11 @@ public class KdTreeMine {
             distanceList.add(cell.future_distanceTo(cell2) - cell.getRadius() - cell2.getRadius());
         }
         Cell cellMinDistance = cellsListOverlap.get(distanceList.indexOf(Collections.min(distanceList)));
+//        System.out.println(cell.getY() + " go to " + cellMinDistance.getY());
         cell.setMoveMode(false);
-        cell.moveUntilContact(cellMinDistance);
-
+        if(cell.id != cellMinDistance.id){
+            cell.moveUntilContact(cellMinDistance);
+        }
 
     }
 

@@ -13,8 +13,14 @@ import java.awt.Color;
 public class Console {
     final Cell[] cells;
     final double[] range;
+    private double maxR;
     final boolean terminalMode;
     List<Pair<Double, Integer>> queue = new LinkedList<>();
+
+    public double getMaxR() {
+        return maxR;
+    }
+
 
     public Console(String mode, String file_path) { // 是否是一个txt文件作为输入呢？
         File file = new File(file_path);
@@ -31,11 +37,13 @@ public class Console {
         int count = input.nextInt();
         cells = new Cell[count];
         System.out.println("Cells information: ");
+        maxR = 0.0;
         for (int i = 0; i < count; i++) {
             double x = input.nextDouble(); // input coordinate x of the cell
             double y = input.nextDouble(); // input coordinate y of the cell
             double r = input.nextDouble(); // input radius of the cell
             double p = input.nextDouble(); // input perception range of the cell
+            if (maxR <= r) maxR = r;
             String c = input.next(); // input color of the cell
             Color color = c.equals("r") ? Color.RED : c.equals("g") ? Color.GREEN : c.equals("b") ? Color.BLUE : Color.YELLOW; // judge colors
             System.out.printf("X: %.1f, Y: %.1f, Radius: %.1f, Perception range: %.1f, Color: %s\n", x, y, r, p, c);
@@ -44,6 +52,7 @@ public class Console {
             Cell cell = new Cell(r, x, y, color, p); // initialize cell
             cells[i] = cell; // add the cell into array
         }
+
         terminalMode = !mode.equals("gui"); // default is gui
         if (terminalMode) { // only terminal mode should input query
             int n = input.nextInt();
