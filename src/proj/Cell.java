@@ -1,5 +1,6 @@
 package proj;
 
+import edu.princeton.cs.algs4.Point2D;
 import proj.bhtree.BHTree;
 import proj.bhtree.QuadNode;
 import edu.princeton.cs.algs4.StdDraw;
@@ -76,7 +77,7 @@ public class Cell {
 
     public double future_distanceTo(Cell other) {
         this.future_move();
-        other.future_move();
+//        other.future_move();
         return Math.sqrt(Math.pow((this.future_pos_x - other.pos_x), 2.0) + Math.pow((this.future_pos_y - other.pos_y), 2.0));
     }
     public double x_distanceTo(Cell other) {
@@ -178,6 +179,11 @@ public class Cell {
                 } else if (this.pos_x - delta <= 0 + this.radius && this.MOVE) {
                     this.pos_x = 0 + this.radius;
                 }
+                if(this.pos_x > 80){System.out.println("11111111111111111111111111111111111111111111111111");
+                    System.out.println(this.color);
+                    System.out.println(this.color_index);
+                    System.out.println(this.MOVE);
+                }
                 break;
 
             case YELLOW:
@@ -185,6 +191,11 @@ public class Cell {
                     this.pos_x = this.pos_x + delta;
                 } else if (this.pos_x + delta >= wall_width - this.radius && this.MOVE) {
                     this.pos_x = wall_width - this.radius;
+                }
+                if(this.pos_x > 80){System.out.println("11111111111111111111111111111111111111111111111111");
+                    System.out.println(this.color);
+                    System.out.println(this.color_index);
+                    System.out.println(this.MOVE);
                 }
                 break;
             default:
@@ -262,6 +273,18 @@ public class Cell {
         this.yellow_num += 1;
     }
 
+//    public double distanceTo(Cell that) {
+//        double dx = this.pos_x - that.getX();
+//        double dy = this.pos_y - that.getY();
+//        return Math.sqrt(dx*dx + dy*dy);
+//    }
+
+    public double distanceSquaredTo(Cell that) {
+        double dx = this.pos_x - that.getX();
+        double dy = this.pos_y - that.getY();
+        return dx*dx + dy*dy;
+    }
+
     public void reset_num(){
         switch (this.getColorIndex()) {
             case RED:
@@ -320,7 +343,6 @@ public class Cell {
     public void check_color() {
         double sum_num = this.red_num + this.blue_num + this.green_num + this.yellow_num;
         // check red
-        System.out.println(sum_num);
         if (this.color == Color.RED) {
             if (this.red_num >= 3 && this.red_num / sum_num > 0.7) {
                 this.color = Color.GREEN;

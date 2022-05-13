@@ -70,22 +70,22 @@ public class BHTree {
             if (this.cell != null) {
                 if (hasNoLeaf()) { // No subtree, no need to go on
 //            System.out.println("True");
-                    if (this.qNode.contains_circle(cell.get_future_x(), cell.get_future_y(), radius)) {
+//                    if (this.qNode.contains_circle(cell.get_future_x(), cell.get_future_y(), radius)) {
                         if (cell.Cell_Overlap(this.cell) && this.cell.id != cell.id) {
                             cell.setMoveMode(false);
                             cell.moveUntilContact(this.cell);
 //                            this.cell.setMoveMode(false);
                         }
-                    }
+//                    }
 //                    System.out.printf("distance is %f\r\n", cell.future_distanceTo(this.cell));
                 } else {
-                    if (this.qNode.contains_circle(cell.get_future_x(), cell.get_future_y(), radius)) {
+//                    if (this.qNode.contains_circle(cell.get_future_x(), cell.get_future_y(), radius)) {
                         if (cell.Cell_Overlap(this.cell) && this.cell.id != cell.id) {
                             cell.setMoveMode(false);
                             cell.moveUntilContact(this.cell);
 //                            this.cell.setMoveMode(false);
                         }
-                    }
+//                    }
 //                    System.out.printf("distance is %f\r\n", cell.future_distanceTo(this.cell));
                     this.nwChild.checkCollision(cell);
                     this.neChild.checkCollision(cell);
@@ -93,6 +93,7 @@ public class BHTree {
                     this.seChild.checkCollision(cell);
                 }
             }
+//            System.out.println(cell.getMoveMode());
         }
     }
 
@@ -108,8 +109,8 @@ public class BHTree {
                     if (cell.inDetection(this.cell) && this.cell.id != cell.id) {
                         cell.add_num(this.cell);
 //                        System.out.println(cell.red_num);
-                        cell.check_color();
-                        cell.reset_num();
+//                        cell.check_color();
+//                        cell.reset_num();
                     }
                 }
             } else {
