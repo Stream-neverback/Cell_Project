@@ -19,7 +19,7 @@ public class SimulationSystem {
     public boolean hasCollision = true;
     public boolean noSpeedUp = false;
     public boolean noSpeedUpCollision = false;
-    public boolean benchmark = false;
+    public boolean benchmark = true;
     public boolean isMouseMode = false;
     public boolean isOutOfTime = false;
 
@@ -97,12 +97,6 @@ public class SimulationSystem {
 //                    }
 //                }
             }
-            if (benchmark) {
-                long end = System.nanoTime();
-                if (cnt % 10 == 0)
-                    System.err.println(String.format("%.3f", (end - begin) * 1e-3) + "us @" + cells.length + "\tparticles\tnoSpeedUp=" + noSpeedUp + "\tnoSpeedUpCollision=" + noSpeedUpCollision + "\thasCollision=" + hasCollision);
-                cnt++;
-            }
             if (isGUIMode) {
 //                System.out.println("a");
                 StdDraw.clear(StdDraw.BLACK);
@@ -171,6 +165,14 @@ public class SimulationSystem {
                     } else
                         break;
                 }
+            }
+
+            if (benchmark) {
+                long end = System.nanoTime();
+                double frame_rate = 1 / ((end - begin) * 1e-9);
+                if (cnt % 10 == 0)
+                    System.err.println("Frame rate: " + frame_rate);
+                cnt++;
             }
         }
     }
