@@ -60,10 +60,14 @@ public class SimulationSystem {
         if (isGUIMode) {
             StdDraw.show();
             StdDraw.enableDoubleBuffering();
+            double ratio = range[3]/range[1];
+            int canvasWidth = 400;
+            int canvasHeight = (int) ((double) canvasWidth * ratio);
+//            System.out.println(canvasWidth + " " + canvasHeight);
+            StdDraw.setCanvasSize(canvasWidth, canvasHeight);
 //            System.out.printf("%f,%f,%f,%f",range[0], range[1],range[2], range[3]);
             StdDraw.setXscale(range[0], range[1]);
             StdDraw.setYscale(range[2], range[3]);
-            StdDraw.setScale(-0.001,Math.max(range[1],range[3]));
         }
         int cnt = 0;
         for (double t = 0.0; true; t = t + dt) {
@@ -123,12 +127,12 @@ public class SimulationSystem {
                 Arrays.stream(cells).filter(c -> c.in(qNode))
                         .forEach(p -> {
                             tree.checkCollision(p);
-                            System.out.println(p.getMoveMode());
-                            System.out.printf("cell's y is %f\r\n", p.getY());
-                            System.out.printf("cell's future_y is %f\r\n", p.get_future_y());
+//                            System.out.println(p.getMoveMode());
+//                            System.out.printf("cell's y is %f\r\n", p.getY());
+//                            System.out.printf("cell's future_y is %f\r\n", p.get_future_y());
                             p.move();
                             tree.checkCollision(p);
-                            System.out.println(p.getMoveMode());
+//                            System.out.println(p.getMoveMode());
                         });
 //                StdDraw.setPenColor(Color.RED);
 //                StdDraw.circle(0.5, 0.5, 0.2);
@@ -188,7 +192,7 @@ public class SimulationSystem {
     }
 
     public static void main(String[] args) {
-        String file_path = "./sample/sample1.txt";
+        String file_path = "./sample/sample2.txt";
         Console console = new Console("gui", file_path);
         SimulationSystem s = new SimulationSystem();
         s.simulation(console, 1.0/15.0);
