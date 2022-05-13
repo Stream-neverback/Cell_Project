@@ -7,7 +7,7 @@ import edu.princeton.cs.algs4.StdDraw;
 
 import java.awt.Color;
 
-public class Cell {
+public class Cell implements Comparable<Cell> {
     static double wall_width = 0; // x-direction
     static double wall_length = 0; // y-direction
     static double dt = 1.0 / 15.0;
@@ -32,7 +32,14 @@ public class Cell {
     static final int GREEN = 1;
     static final int BLUE = 2;
     static final int YELLOW = 3;
-
+    @Override
+    public int compareTo(Cell that) {
+        if (this.pos_y < that.getY()) return -1;
+        if (this.pos_y > that.getY()) return +1;
+        if (this.pos_x < that.getX()) return -1;
+        if (this.pos_x > that.getX()) return +1;
+        return 0;
+    }
     public static void initWall(double wX, double wY) {
         wall_width = wX;
         wall_length = wY;
@@ -349,11 +356,6 @@ public class Cell {
         }
         // check green
         if (this.color == Color.GREEN) {
-            System.out.printf("red is %f\r\n", this.red_num);
-            System.out.printf("green is %f\r\n", this.green_num);
-            System.out.printf("yellow is %f\r\n", this.yellow_num);
-            System.out.printf("blue is %f\r\n", this.blue_num);
-            System.out.printf("x is %f, y is %f\r\n", this.pos_x,this.pos_y);
             if (this.green_num >= 3 && this.green_num / sum_num > 0.7) {
                 this.color = Color.BLUE;
                 this.color_index = BLUE;
