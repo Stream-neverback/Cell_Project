@@ -438,4 +438,32 @@ public class Cell implements Comparable<Cell> {
 
 //        cell.draw();
     }
+
+    @Override
+    public String toString() {
+        String tmp_color = "r";
+        switch (this.color_index) {
+            case 0: {
+                tmp_color = "r";
+                break;
+            }
+            case 1: {
+                tmp_color = "g";
+                break;
+            }
+            case 2: {
+                tmp_color = "b";
+                break;
+            }
+            case 3: {
+                tmp_color = "y";
+                break;
+            }
+            default: {
+                tmp_color = "r";
+                break;
+            }
+        }
+        return pos_x + " " + pos_y + " " + tmp_color;
+    }
 }
