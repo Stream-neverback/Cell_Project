@@ -32,6 +32,7 @@ public class Cell implements Comparable<Cell> {
     static final int GREEN = 1;
     static final int BLUE = 2;
     static final int YELLOW = 3;
+
     @Override
     public int compareTo(Cell that) {
         if (this.pos_y < that.getY()) return -1;
@@ -40,6 +41,7 @@ public class Cell implements Comparable<Cell> {
         if (this.pos_x > that.getX()) return +1;
         return 0;
     }
+
     public static void initWall(double wX, double wY) {
         wall_width = wX;
         wall_length = wY;
@@ -68,12 +70,14 @@ public class Cell implements Comparable<Cell> {
         this(1, 0, 0, Color.RED, 1);
     }
 
-    public void setMoveMode(boolean mode){
+    public void setMoveMode(boolean mode) {
         this.MOVE = mode;
     }
-    public boolean getMoveMode(){
+
+    public boolean getMoveMode() {
         return this.MOVE;
     }
+
     public double distanceTo(Cell other) {
         return Math.sqrt(Math.pow((this.pos_x - other.pos_x), 2.0) + Math.pow((this.pos_y - other.pos_y), 2.0));
     }
@@ -83,6 +87,7 @@ public class Cell implements Comparable<Cell> {
 //        other.future_move();
         return Math.sqrt(Math.pow((this.future_pos_x - other.pos_x), 2.0) + Math.pow((this.future_pos_y - other.pos_y), 2.0));
     }
+
     public double x_distanceTo(Cell other) {
 //        System.out.println(other);
         return Math.abs(other.pos_x - this.pos_x);
@@ -94,11 +99,11 @@ public class Cell implements Comparable<Cell> {
 
     public boolean inDetection(Cell other) {
         return (this.x_distanceTo(other) <= this.perception_r &&
-                this.y_distanceTo(other) <= this.perception_r );
+                this.y_distanceTo(other) <= this.perception_r);
 
     }
 
-    public void future_move(){
+    public void future_move() {
         this.future_pos_x = this.pos_x;
         this.future_pos_y = this.pos_y;
         switch (this.color_index) {
@@ -137,12 +142,15 @@ public class Cell implements Comparable<Cell> {
                 break;
         }
     }
-    public double get_future_x(){
+
+    public double get_future_x() {
         return this.future_pos_x;
     }
-    public double get_future_y(){
+
+    public double get_future_y() {
         return this.future_pos_y;
     }
+
     public boolean Cell_Overlap(Cell other) {
         return future_distanceTo(other) <= this.radius + other.radius;
     }
@@ -154,22 +162,41 @@ public class Cell implements Comparable<Cell> {
                 this.wall_width - this.pos_y >= radius;
     }
 
+    public boolean in(double xmin, double ymin, double xmax, double ymax) {
+
+        return (pos_x >= xmin && pos_y >= ymin && pos_x <= xmax && pos_y <= ymax);
+    }
+
+
     public boolean in(QuadNode q) {
         return q.contains(this.pos_x, this.pos_y);
     }
-    public boolean isOut(){
+
+    public boolean nearToCorner(double xmin, double ymin, double xmax, double ymax) {
+        return (distanceSquaredTo(xmin, ymin) <= radius || distanceSquaredTo(xmax, ymin) <= radius || distanceSquaredTo(xmin, ymax) <= radius || distanceSquaredTo(xmax, ymax) <= radius);
+
+    }
+
+    public double distanceSquaredTo(double x, double y) {
+        double dx = this.pos_x - x;
+        double dy = this.pos_y - y;
+        return dx * dx + dy * dy;
+    }
+
+    public boolean isOut() {
         if (pos_x + radius > wall_width || pos_y + radius > wall_length || pos_x - radius < 0 || pos_y - radius < 0) {
             System.out.println("Out! " + (pos_x) + " " + pos_y);
             return true;
         }
         return false;
     }
+
     public void move() {
         switch (this.color_index) {
             case RED:
                 if (this.pos_y + delta < wall_length - this.radius && this.MOVE) {
                     this.pos_y = this.pos_y + delta;
-                } else if (this.pos_y + delta >= wall_length - this.radius && this.MOVE){
+                } else if (this.pos_y + delta >= wall_length - this.radius && this.MOVE) {
                     this.pos_y = wall_length - this.radius;
                 }
 //                if(isOut()){System.out.println("11111111111111111111111111111111111111111111111111");
@@ -225,10 +252,12 @@ public class Cell implements Comparable<Cell> {
                     double y = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
                     this.pos_y = cell.pos_y - y;
                 }
-                if(isOut()){System.out.println("11111111111111111111111111111111111111111111111111");
+                if (isOut()) {
+                    System.out.println("11111111111111111111111111111111111111111111111111");
                     System.out.println(this.color);
                     System.out.println(this.color_index);
-                    System.out.println(this.MOVE);}
+                    System.out.println(this.MOVE);
+                }
                 break;
 
             case GREEN:
@@ -246,7 +275,7 @@ public class Cell implements Comparable<Cell> {
                 break;
 
             case YELLOW:
-                if (this.pos_x + delta <  wall_width - this.radius) {
+                if (this.pos_x + delta < wall_width - this.radius) {
                     double x = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
                     this.pos_x = cell.pos_x - x;
                     break;
@@ -255,6 +284,7 @@ public class Cell implements Comparable<Cell> {
                 break;
         }
     }
+
     public void draw() {
         StdDraw.setPenColor(this.color);
         StdDraw.filledCircle(this.pos_x, this.pos_y, this.radius);
@@ -309,15 +339,16 @@ public class Cell implements Comparable<Cell> {
     public double distanceSquaredTo(Cell that) {
         double dx = this.pos_x - that.getX();
         double dy = this.pos_y - that.getY();
-        return dx*dx + dy*dy;
+        return dx * dx + dy * dy;
     }
 
-    public void reset_num(){
+    public void reset_num() {
         this.red_num = 0;
         this.green_num = 0;
         this.blue_num = 0;
         this.yellow_num = 0;
     }
+
     public void add_num(Cell cell) {
         switch (cell.getColorIndex()) {
             case RED:
@@ -350,7 +381,7 @@ public class Cell implements Comparable<Cell> {
 //                this.red_num -= 1;
 //                this.green_num += 1;
                 this.MOVE = true;
-            } else if (this.yellow_num >= 1 && this.yellow_num / sum_num < 0.1) {
+            } else if (this.yellow_num >= 1 && this.yellow_num / (sum_num + 1) < 0.1) {
                 this.color = Color.YELLOW;
                 this.color_index = YELLOW;
 //                this.red_num -= 1;
@@ -366,7 +397,7 @@ public class Cell implements Comparable<Cell> {
 //                this.green_num -= 1;
 //                this.blue_num += 1;
                 this.MOVE = true;
-            } else if (this.red_num >= 1 && this.red_num / sum_num < 0.1) {
+            } else if (this.red_num >= 1 && this.red_num / (sum_num + 1) < 0.1) {
                 this.color = Color.RED;
                 this.color_index = RED;
 //                this.green_num -= 1;
@@ -382,7 +413,7 @@ public class Cell implements Comparable<Cell> {
 //                this.blue_num -= 1;
 //                this.yellow_num += 1;
                 this.MOVE = true;
-            } else if (this.green_num >= 1 && this.green_num / sum_num < 0.1) {
+            } else if (this.green_num >= 1 && this.green_num / (sum_num + 1) < 0.1) {
                 this.color = Color.GREEN;
                 this.color_index = GREEN;
 //                this.blue_num -= 1;
@@ -390,22 +421,22 @@ public class Cell implements Comparable<Cell> {
                 this.MOVE = true;
             }
         }
-        // check blue
-        if (this.color == Color.BLUE) {
-            if (this.blue_num >= 3 && this.blue_num / sum_num > 0.7) {
-                this.color = Color.YELLOW;
-                this.color_index = YELLOW;
-//                this.blue_num -= 1;
-//                this.yellow_num += 1;
-                this.MOVE = true;
-            } else if (this.green_num >= 1 && this.green_num / sum_num < 0.1) {
-                this.color = Color.GREEN;
-                this.color_index = GREEN;
-//                this.blue_num -= 1;
-//                this.green_num += 1;
-                this.MOVE = true;
-            }
-        }
+//        // check blue
+//        if (this.color == Color.BLUE) {
+//            if (this.blue_num >= 3 && this.blue_num / sum_num > 0.7) {
+//                this.color = Color.YELLOW;
+//                this.color_index = YELLOW;
+////                this.blue_num -= 1;
+////                this.yellow_num += 1;
+//                this.MOVE = true;
+//            } else if (this.green_num >= 1 && this.green_num / sum_num < 0.1) {
+//                this.color = Color.GREEN;
+//                this.color_index = GREEN;
+////                this.blue_num -= 1;
+////                this.green_num += 1;
+//                this.MOVE = true;
+//            }
+//        }
 
         // check yellow
         if (this.color == Color.YELLOW) {
@@ -415,7 +446,7 @@ public class Cell implements Comparable<Cell> {
 //                this.yellow_num -= 1;
 //                this.red_num += 1;
                 this.MOVE = true;
-            } else if (this.yellow_num >= 1 && this.yellow_num / sum_num < 0.1) {
+            } else if (this.blue_num >= 1 && this.blue_num / (sum_num + 1) < 0.1) {
                 this.color = Color.BLUE;
                 this.color_index = BLUE;
 //                this.yellow_num -= 1;
