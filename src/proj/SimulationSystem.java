@@ -186,7 +186,7 @@ public class SimulationSystem {
 
     public static void main(String[] args) {
 //        String file_path = "./sample/sample/sample2.txt";
-        String file_path = "./sample/sample2.txt";
+        String file_path = "./sample/sample3.txt";
         Console console = new Console("gui", file_path);
         SimulationSystem s = new SimulationSystem();
         s.simulation(console, 1.0/15.0);

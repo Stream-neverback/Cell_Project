@@ -173,7 +173,7 @@ public class Cell implements Comparable<Cell> {
     }
 
     public boolean nearToCorner(double xmin, double ymin, double xmax, double ymax) {
-        return (distanceSquaredTo(xmin, ymin) <= radius || distanceSquaredTo(xmax, ymin) <= radius || distanceSquaredTo(xmin, ymax) <= radius || distanceSquaredTo(xmax, ymax) <= radius);
+        return (distanceSquaredTo(xmin, ymin) <= radius*radius || distanceSquaredTo(xmax, ymin) <= radius*radius || distanceSquaredTo(xmin, ymax) <= radius*radius || distanceSquaredTo(xmax, ymax) <= radius*radius);
 
     }
 
@@ -373,6 +373,7 @@ public class Cell implements Comparable<Cell> {
 
     public void check_color() {
         double sum_num = this.red_num + this.blue_num + this.green_num + this.yellow_num;
+        System.out.printf("sum num is %f\r\n",sum_num);
         // check red
         if (this.color == Color.RED) {
             if (this.red_num >= 3 && this.red_num / sum_num > 0.7) {
@@ -381,7 +382,7 @@ public class Cell implements Comparable<Cell> {
 //                this.red_num -= 1;
 //                this.green_num += 1;
                 this.MOVE = true;
-            } else if (this.yellow_num >= 1 && this.yellow_num / (sum_num + 1) < 0.1) {
+            } else if (this.yellow_num >= 1 && this.yellow_num / (sum_num) < 0.1) {
                 this.color = Color.YELLOW;
                 this.color_index = YELLOW;
 //                this.red_num -= 1;
@@ -397,7 +398,7 @@ public class Cell implements Comparable<Cell> {
 //                this.green_num -= 1;
 //                this.blue_num += 1;
                 this.MOVE = true;
-            } else if (this.red_num >= 1 && this.red_num / (sum_num + 1) < 0.1) {
+            } else if (this.red_num >= 1 && this.red_num / (sum_num) < 0.1) {
                 this.color = Color.RED;
                 this.color_index = RED;
 //                this.green_num -= 1;
@@ -413,7 +414,7 @@ public class Cell implements Comparable<Cell> {
 //                this.blue_num -= 1;
 //                this.yellow_num += 1;
                 this.MOVE = true;
-            } else if (this.green_num >= 1 && this.green_num / (sum_num + 1) < 0.1) {
+            } else if (this.green_num >= 1 && this.green_num / (sum_num) < 0.1) {
                 this.color = Color.GREEN;
                 this.color_index = GREEN;
 //                this.blue_num -= 1;
@@ -446,7 +447,7 @@ public class Cell implements Comparable<Cell> {
 //                this.yellow_num -= 1;
 //                this.red_num += 1;
                 this.MOVE = true;
-            } else if (this.blue_num >= 1 && this.blue_num / (sum_num + 1) < 0.1) {
+            } else if (this.blue_num >= 1 && this.blue_num / (sum_num) < 0.1) {
                 this.color = Color.BLUE;
                 this.color_index = BLUE;
 //                this.yellow_num -= 1;
