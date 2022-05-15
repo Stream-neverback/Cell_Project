@@ -4,7 +4,6 @@ import edu.princeton.cs.algs4.StdDraw;
 import proj.bhtree.BHTree;
 import proj.Cell;
 import proj.Console;
-//import proj.oltree.OverlapTree;
 import proj.bhtree.QuadNode;
 import java.awt.*;
 import java.util.*;
@@ -73,57 +72,36 @@ public class SimulationSystem {
             StdDraw.setYscale(range[2], range[3]);
         }
         int cnt = 0;
-        int loopCnt = 0;
+//        int loopCnt = 0;
         for (double t = 0.0; true; t = t + dt) {
-            loopCnt+=1;
+//            loopCnt+=1;
             long begin = 0;
             begin = System.nanoTime();
             KdTreeMine tree = new KdTreeMine(range[0], range[2], range[1], range[3], console.getMaxR());
-            for(Cell cell:cells){
-                tree.insert(cell);
-            }
-            int cellCnt=0;
-            for(Cell cell:cells){
-                cellCnt=cell.id;
-                tree.checkCollision(cell);
-                cell.move();
-            }
-            for(Cell cell:cells){
-                tree.checkDetection(cell);
-            }
-            for (Cell cell:cells){
-                cell.check_color();
-                cell.reset_num();
-                cell.setMoveMode(true);
-            }
-
-     ////////////////////////////////////////////////////////////////////////////////////
-//            Arrays.stream(cells).parallel()
-////                        .filter(c -> c.in(qNode))
-//                    .forEachOrdered(tree::insert);
-//            // OK
-//            Arrays.stream(cells)
-////                        .filter(c -> c.in(qNode))
-//                    .forEachOrdered(p -> {
-//                        tree.checkCollision(p);
-////                            System.out.println(p.getMoveMode());
-////                            System.out.printf("cell's y is %f\r\n", p.getY());
-////                            System.out.printf("cell's future_y is %f\r\n", p.get_future_y());
-//                        p.move();
-////                            tree.checkCollision(p);
-////                            if(p.getMoveMode()) {
-////                                System.out.println(p.getX());
-////                                System.out.println(p.getX());
-////                            }
-//                    });
-//            Arrays.stream(cells).forEachOrdered(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
-//            Arrays.stream(cells).forEachOrdered(p -> {p.check_color();});
-//            Arrays.stream(cells).forEachOrdered(p -> {p.reset_num();});
-//            Arrays.stream(cells)
-////                        .filter(c -> c.in(qNode))
-//                    .forEachOrdered(p -> {p.setMoveMode(true);});
-
-            ////////////////////////////////////////////////////////////////////////////////////////
+            Arrays.stream(cells).parallel()
+//                        .filter(c -> c.in(qNode))
+                    .forEachOrdered(tree::insert);
+            // OK
+            Arrays.stream(cells)
+//                        .filter(c -> c.in(qNode))
+                    .forEach(p -> {
+                        tree.checkCollision(p);
+//                            System.out.println(p.getMoveMode());
+//                            System.out.printf("cell's y is %f\r\n", p.getY());
+//                            System.out.printf("cell's future_y is %f\r\n", p.get_future_y());
+                        p.move();
+//                            tree.checkCollision(p);
+//                            if(p.getMoveMode()) {
+//                                System.out.println(p.getX());
+//                                System.out.println(p.getX());
+//                            }
+                    });
+            Arrays.stream(cells).forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
+            Arrays.stream(cells).forEach(p -> {p.check_color();});
+            Arrays.stream(cells).forEachOrdered(p -> {p.reset_num();});
+            Arrays.stream(cells)
+//                        .filter(c -> c.in(qNode))
+                    .forEach(p -> {p.setMoveMode(true);});
             if (isMouseMode && StdDraw.isMousePressed()) { // 创意：点击鼠标可以实现某些功能，比如点击一下窗口内如果刚好在某个cell范围内可以更改它的颜色
                 double mouse_pressed_x = StdDraw.mouseX();
                 double mouse_pressed_y = StdDraw.mouseY();
@@ -144,15 +122,7 @@ public class SimulationSystem {
             }
             if (isGUIMode) {
                 StdDraw.clear(StdDraw.BLACK);
-//                for (Cell cell:cells){
-//                    cell.draw();
-//                }
                 Arrays.stream(cells).parallel().forEachOrdered(Cell::draw);
-//                try {
-//                    sleep((long) 2000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
                 // 在树里面寻找是否有这个cell
 //                QuadNode qNode = new QuadNode((range[0] + range[1]) / 2, (range[2] + range[3]) / 2,
 //                        (range[1] - range[0]), (range[3] - range[2]));
@@ -217,7 +187,7 @@ public class SimulationSystem {
     public static void main(String[] args) {
 //        String file_path = "./sample/sample/sample2.txt";
         String file_path = "./sample/sample2.txt";
-        Console console = new Console("gui", file_path);//"ter" terminal mode, "gui" gui mode
+        Console console = new Console("gui", file_path);
         SimulationSystem s = new SimulationSystem();
         s.simulation(console, 1.0/15.0);
     }
