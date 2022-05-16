@@ -270,7 +270,7 @@ public class KdTreeMine {
                     }
                 }
             }
-            System.out.println(cellArrayList.size());
+//            System.out.println(cellArrayList.size());
         }
     }
 

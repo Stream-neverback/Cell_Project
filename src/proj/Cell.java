@@ -373,7 +373,7 @@ public class Cell implements Comparable<Cell> {
 
     public void check_color() {
         double sum_num = this.red_num + this.blue_num + this.green_num + this.yellow_num;
-        System.out.printf("sum num is %f\r\n",sum_num);
+//        System.out.printf("sum num is %f\r\n",sum_num);
         // check red
         if (this.color == Color.RED) {
             if (this.red_num >= 3 && this.red_num / sum_num > 0.7) {
@@ -465,8 +465,8 @@ public class Cell implements Comparable<Cell> {
             cell.draw();
         }
 //        System.out.println(cell.id);
-        System.out.println(cell.getColorIndex());
-        System.out.println(cell.getY());
+//        System.out.println(cell.getColorIndex());
+//        System.out.println(cell.getY());
 
 //        cell.draw();
     }
@@ -497,5 +497,32 @@ public class Cell implements Comparable<Cell> {
             }
         }
         return pos_x + " " + pos_y + " " + tmp_color;
+    }
+
+    public String colorIndex() {
+        String tmp_color = "r";
+        switch (this.color_index) {
+            case 0: {
+                tmp_color = "r";
+                break;
+            }
+            case 1: {
+                tmp_color = "g";
+                break;
+            }
+            case 2: {
+                tmp_color = "b";
+                break;
+            }
+            case 3: {
+                tmp_color = "y";
+                break;
+            }
+            default: {
+                tmp_color = "r";
+                break;
+            }
+        }
+        return tmp_color;
     }
 }
