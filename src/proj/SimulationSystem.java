@@ -2,10 +2,14 @@ package proj;
 
 import edu.princeton.cs.algs4.StdDraw;
 
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 
+import proj.bhtree.BHTree;
+import proj.bhtree.QuadNode;
 import proj.kdtree.KdTreeMine;
+import proj.kdtree.RectHV;
 
 import static java.lang.Thread.sleep;
 
@@ -58,6 +62,8 @@ public class SimulationSystem {
         OutputStreamWriter dos1=new OutputStreamWriter(fos1);
         int wrong_cnt = 0; // count how many wrongs are there
         int total_cnt = 0;
+        double t_mouse = 0.0; // 点鼠标之后的一段时间都不反应
+        Random rand = new Random();
         Cell[] cells = console.getCells();
         double[] range = console.getRange();
         final boolean isGUIMode = !console.isTerminalMode();
@@ -97,11 +103,6 @@ public class SimulationSystem {
             if (isGUIMode) {
                 StdDraw.clear(StdDraw.BLACK);
                 Arrays.stream(cells).parallel().forEachOrdered(Cell::draw);
-                // 在树里面寻找是否有这个cell
-//                QuadNode qNode = new QuadNode((range[0] + range[1]) / 2, (range[2] + range[3]) / 2,
-//                        (range[1] - range[0]), (range[3] - range[2]));
-//                BHTree tree = new BHTree(qNode);
-
                 StdDraw.show();
             } else {
                 while (true) {
@@ -145,11 +146,33 @@ public class SimulationSystem {
                         break;
                 }
             }
+
+//            QuadNode qNode = new QuadNode((range[0] + range[1]) / 2, (range[2] + range[3]) / 2,
+//                    (range[1] - range[0]), (range[3] - range[2]));
+//            BHTree tree = new BHTree(qNode);
             KdTreeMine tree = new KdTreeMine(range[0], range[2], range[1], range[3], console.getMaxR());
             Arrays.stream(cells).parallel()
 //                        .filter(c -> c.in(qNode))
                     .forEachOrdered(tree::insert);
             // OK
+//            for (int i = 0; i < cells.length; i++) {
+//                double min_distance = 0;
+//                int min_id = i;
+//                for (int j = 0; j < cells.length; j++) {
+//                    if (i != j && cells[i].Cell_Overlap(cells[j])) {
+//                        double tmp_distance = cells[i].future_distanceTo(cells[j]) - cells[i].getRadius() - cells[j].getRadius();
+////                        System.out.println("overlaps! " + t);
+//                        if (tmp_distance < min_distance) {
+//                            min_distance = tmp_distance;
+//                            min_id = j;
+//                        }
+//                    }
+//                }
+//                if (min_id != i) {
+//                    cells[i].moveUntilContact(cells[min_id]);
+//                }
+//                else cells[i].move();
+//            }
             Arrays.stream(cells)
 //                        .filter(c -> c.in(qNode))
                     .forEach(p -> {
@@ -158,43 +181,46 @@ public class SimulationSystem {
 //                            System.out.printf("cell's y is %f\r\n", p.getY());
 //                            System.out.printf("cell's fusture_y is %f\r\n", p.get_future_y());
                         p.move();
+//                        tree.checkCollision(p);
 //                            tree.checkCollision(p);
 //                            if(p.getMoveMode()) {
 //                                System.out.println(p.getX());
 //                                System.out.println(p.getX());
 //                            }
                     });
-            Arrays.stream(cells).forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
+            Arrays.stream(cells).forEach(tree::checkDetection);
             Arrays.stream(cells).forEach(Cell::check_color);
             Arrays.stream(cells).forEachOrdered(Cell::reset_num);
             Arrays.stream(cells)
 //                        .filter(c -> c.in(qNode))
                     .forEach(p -> {p.setMoveMode(true);});
-            if (isMouseMode && StdDraw.isMousePressed()) { // 创意：点击鼠标可以实现某些功能，比如点击一下窗口内如果刚好在某个cell范围内可以更改它的颜色
-                double mouse_pressed_x = StdDraw.mouseX();
-                double mouse_pressed_y = StdDraw.mouseY();
-                // 在树里面寻找是否有这个cell
-//                    QuadNode qNode = new QuadNode((range[0] + range[1]) / 2, (range[2] + range[3]) / 2,
-//                            (range[1] - range[0]), (range[3] - range[2]));
-//                    BHTree tree = new BHTree(qNode);
-//                    Arrays.stream(cells).parallel()
-//                            .filter(c -> c.in(qNode))
-//                            .forEachOrdered(p -> {
-//                                tree.insert(p);
-////                                p.move();
-//                            });
-//
-//
-//
-//                    Arrays.stream(cells).parallel().forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
-            }
+//            if (isGUIMode && isMouseMode && t_mouse < t && StdDraw.isMousePressed()) { // 创意：点击鼠标可以实现某些功能，比如点击一下窗口内如果刚好在某个cell范围内可以更改它的颜色
+//                double mouse_pressed_x = StdDraw.mouseX();
+//                double mouse_pressed_y = StdDraw.mouseY();
+//                // 在树里面寻找是否有这个cell
+//                Iterable<Cell> cellsInRange = tree.range(new RectHV(mouse_pressed_x - 1, mouse_pressed_y - 1, mouse_pressed_x + 1, mouse_pressed_y + 1));
+////                    Arrays.stream(cells).parallel().forEach(tree::checkDetection); //查找到之后随机改颜色，或者别的功能，改颜色似乎别的cell也应该改一下
+//                for (Cell cell : cellsInRange) {
+//                    int i = rand.nextInt(4);
+//                    Color c = switch (i) {
+//                        case 0 -> Color.RED;
+//                        case 1 -> Color.GREEN;
+//                        case 2 -> Color.BLUE;
+//                        case 3 -> Color.YELLOW;
+//                        default -> Color.BLUE;
+//                    };
+//                    cell.setColor(c, i);
+//                    break;
+//                }
+//                t_mouse = t + 1.0;
+//            }
 
 
             if (benchmark) {
                 long end = System.nanoTime();
                 double frame_rate = 1 / ((end - begin) * 1e-9);
                 if (cnt % 50 == 0)
-//                    System.err.println("Frame rate in benchmark: " + frame_rate);
+                    System.err.println("Frame rate in benchmark: " + frame_rate);
                 cnt++;
             }
             else {
@@ -233,7 +259,7 @@ public class SimulationSystem {
 
     public static void main(String[] args) {
 //        String file_path = "./sample/sample/sample2.txt";
-        file_version = "2";
+        file_version = "3";
         String file_path = "./sample/sample" + file_version + ".txt";
         Console console = new Console("ter", file_path);
         SimulationSystem s = new SimulationSystem();

@@ -42,9 +42,18 @@ public class Cell implements Comparable<Cell> {
         return 0;
     }
 
+    public void printNum(){
+        System.out.printf("red: %s, green: %s, blue: %s, yellow: %s\n", red_num, green_num, blue_num, yellow_num);
+    }
+
     public static void initWall(double wX, double wY) {
         wall_width = wX;
         wall_length = wY;
+    }
+
+    public void setColor(Color color, int new_index){
+        this.color = color;
+        this.color_index = new_index;
     }
 
     public Cell(double radius, double position_x, double position_y, Color color, double perception_radius) {
