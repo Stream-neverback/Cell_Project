@@ -104,7 +104,12 @@ public class SimulationSystem {
                 StdDraw.clear(StdDraw.BLACK);
                 Arrays.stream(cells).parallel().forEachOrdered(Cell::draw);
                 StdDraw.show();
-            } else {
+//                try {
+//                    sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
                 while (true) {
                     if (console.queue.size() == 0) {
                         double ratio = wrong_cnt/(double) total_cnt;
@@ -117,7 +122,7 @@ public class SimulationSystem {
                         return;
                     }
                     Console.Pair<Double, Integer> pair = console.queue.get(0);
-                    if (pair.key <= t) {
+                    if (pair.key <= t + dt) {
                         double ans_x = input.nextDouble();
                         double ans_y = input.nextDouble();
                         String ans_c = input.next();
@@ -129,10 +134,18 @@ public class SimulationSystem {
                         boolean compare_1 = Math.abs(c.getY() - ans_y) < 0.001;
 //                        if (c.getX() != ans_x || c.getY() != ans_y || !c.colorIndex().equals(ans_c)) {
                         if (!compare_0 || !compare_1 || !c.colorIndex().equals(ans_c)) {
+                            System.out.println(total_cnt + " is wrong!");
                             System.out.println("wrong! answer is: " + ans_x + " " + ans_y + " " + ans_c);
                             System.out.println("your answer is: " + c.getX() + " " + c.getY() + " " + c.colorIndex());
                             wrong_cnt++;
                             write = c.getX() + " " + c.getY() + " " + c.colorIndex() + " wrong" + "\n";
+                            StdDraw.rectangle(c.getX(), c.getY(), 100.0, 100.0);
+                            StdDraw.show();
+                            try {
+                                sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                         else
                             write = c.getX() + " " + c.getY() + " " + c.colorIndex() + "\n";
@@ -220,7 +233,7 @@ public class SimulationSystem {
                 long end = System.nanoTime();
                 double frame_rate = 1 / ((end - begin) * 1e-9);
                 if (cnt % 50 == 0)
-                    System.err.println("Frame rate in benchmark: " + frame_rate);
+//                    System.err.println("Frame rate in benchmark: " + frame_rate);
                 cnt++;
             }
             else {
@@ -261,7 +274,7 @@ public class SimulationSystem {
 //        String file_path = "./sample/sample/sample2.txt";
         file_version = "3";
         String file_path = "./sample/sample" + file_version + ".txt";
-        Console console = new Console("ter", file_path);
+        Console console = new Console("gui", file_path);
         SimulationSystem s = new SimulationSystem();
         s.simulation(console, 1.0/15.0);
     }
