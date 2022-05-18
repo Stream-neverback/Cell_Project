@@ -299,9 +299,10 @@ public class KdTreeMine {
         }
         ArrayList<Double> distanceList = new ArrayList<>();
         for (Cell cell2 : cellsListOverlap) {
-            distanceList.add(cell.future_distanceTo(cell2) - cell.getRadius() - cell2.getRadius());
+            distanceList.add(cell.unitDistanceUntilContact(cell2));
         }
         Cell cellMinDistance = cellsListOverlap.get(distanceList.indexOf(Collections.min(distanceList)));
+//        System.out.println(Collections.min(distanceList));
 //        System.out.println(cell.getY() + " go to " + cellMinDistance.getY());
         cell.setMoveMode(false);
         cellMinDistance.setMoveMode(false);

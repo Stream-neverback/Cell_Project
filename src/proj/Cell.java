@@ -42,7 +42,7 @@ public class Cell implements Comparable<Cell> {
         return 0;
     }
 
-    public void printNum(){
+    public void printNum() {
         System.out.printf("red: %s, green: %s, blue: %s, yellow: %s\n", red_num, green_num, blue_num, yellow_num);
     }
 
@@ -51,7 +51,7 @@ public class Cell implements Comparable<Cell> {
         wall_length = wY;
     }
 
-    public void setColor(Color color, int new_index){
+    public void setColor(Color color, int new_index) {
         this.color = color;
         this.color_index = new_index;
     }
@@ -182,7 +182,7 @@ public class Cell implements Comparable<Cell> {
     }
 
     public boolean nearToCorner(double xmin, double ymin, double xmax, double ymax) {
-        return (distanceSquaredTo(xmin, ymin) <= radius*radius || distanceSquaredTo(xmax, ymin) <= radius*radius || distanceSquaredTo(xmin, ymax) <= radius*radius || distanceSquaredTo(xmax, ymax) <= radius*radius);
+        return (distanceSquaredTo(xmin, ymin) <= radius * radius || distanceSquaredTo(xmax, ymin) <= radius * radius || distanceSquaredTo(xmin, ymax) <= radius * radius || distanceSquaredTo(xmax, ymax) <= radius * radius);
 
     }
 
@@ -253,6 +253,53 @@ public class Cell implements Comparable<Cell> {
                 break;
         }
     }
+
+    public double unitDistanceUntilContact(Cell cell) {
+        switch (this.color_index) {
+            case RED:
+                if (this.pos_y + delta < wall_length - this.radius) {
+                    double y = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
+
+                    double out = cell.pos_y - y-pos_y;
+                    return out;
+                }
+                if (isOut()) {
+                    System.out.println("11111111111111111111111111111111111111111111111111");
+                    System.out.println(this.color);
+                    System.out.println(this.color_index);
+                    System.out.println(this.MOVE);
+                }
+                break;
+
+            case GREEN:
+                if (this.pos_y - delta > 0 + this.radius) {
+                    double y = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
+                    double out = cell.pos_y + y-pos_y;
+                    return out;
+                }
+                break;
+
+            case BLUE:
+                if (this.pos_x - delta > 0 + this.radius) {
+                    double x = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
+                    double out = cell.pos_x + x-pos_x;
+                    return out;
+                }
+                break;
+
+            case YELLOW:
+                if (this.pos_x + delta < wall_width - this.radius) {
+                    double x = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
+                    double out = cell.pos_x - x-pos_x;
+                    return out;
+                }
+                break;
+            default:
+                break;
+        }
+        return 0.0;
+    }
+
 
     public void moveUntilContact(Cell cell) {
         switch (this.color_index) {
