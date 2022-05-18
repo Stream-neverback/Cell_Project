@@ -54,7 +54,7 @@ public class Console {
         }
 
         terminalMode = !mode.equals("gui"); // default is gui
-        if (terminalMode) { // only terminal mode should input query
+        if (!terminalMode) { // only terminal mode should input query
             int n = input.nextInt();
 //            System.out.println("Query: ");
             for (int i = 0; i < n; i++) {
