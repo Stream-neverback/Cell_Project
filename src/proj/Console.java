@@ -22,14 +22,14 @@ public class Console {
     }
 
 
-    public Console(String mode, String file_path) { // 是否是一个txt文件作为输入呢？
-        File file = new File(file_path);
-        Scanner input = null;
-        try {
-            input = new Scanner(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    public Console(String mode) { // 是否是一个txt文件作为输入呢？
+//        File file = new File(file_path);
+        Scanner input = new Scanner(System.in);
+//        try {
+//            input = new Scanner(file);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
         double range_x = input.nextInt();
         double range_y = input.nextInt();
         this.range = new double[]{0, range_x, 0, range_y};
@@ -54,7 +54,7 @@ public class Console {
         }
 
         terminalMode = !mode.equals("gui"); // default is gui
-        if (!terminalMode) { // only terminal mode should input query
+        if (terminalMode) { // only terminal mode should input query
             int n = input.nextInt();
 //            System.out.println("Query: ");
             for (int i = 0; i < n; i++) {
@@ -97,7 +97,7 @@ public class Console {
 
     public static void main(String[] args) throws IOException {
         String file_path = "./sample/sample1.txt";
-        Console console = new Console("gui", file_path);
+//        Console console = new Console("gui", file_path);
     }
 }
 

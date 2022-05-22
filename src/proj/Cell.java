@@ -260,7 +260,7 @@ public class Cell implements Comparable<Cell> {
                 if (this.pos_y + delta < wall_length - this.radius) {
                     double y = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
 
-                    double out = cell.pos_y - y-pos_y;
+                    double out = cell.pos_y - y - pos_y;
                     return out;
                 }
                 if (isOut()) {
@@ -274,7 +274,7 @@ public class Cell implements Comparable<Cell> {
             case GREEN:
                 if (this.pos_y - delta > 0 + this.radius) {
                     double y = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
-                    double out = cell.pos_y + y-pos_y;
+                    double out = pos_y - (cell.pos_y + y);
                     return out;
                 }
                 break;
@@ -282,7 +282,7 @@ public class Cell implements Comparable<Cell> {
             case BLUE:
                 if (this.pos_x - delta > 0 + this.radius) {
                     double x = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
-                    double out = cell.pos_x + x-pos_x;
+                    double out = -(cell.pos_x + x) + pos_x;
                     return out;
                 }
                 break;
@@ -290,7 +290,7 @@ public class Cell implements Comparable<Cell> {
             case YELLOW:
                 if (this.pos_x + delta < wall_width - this.radius) {
                     double x = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
-                    double out = cell.pos_x - x-pos_x;
+                    double out = cell.pos_x - x - pos_x;
                     return out;
                 }
                 break;

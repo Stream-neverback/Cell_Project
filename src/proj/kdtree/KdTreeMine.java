@@ -276,10 +276,10 @@ public class KdTreeMine {
 
     public void checkCollision(Cell cell) {
         cell.setMoveMode(true);
-        double xmin = cell.getX() - collisionRange;
-        double xmax = cell.getX() + collisionRange;
-        double ymin = cell.getY() - collisionRange;
-        double ymax = cell.getY() + collisionRange;
+        double xmin = cell.getX() - collisionRange - largestRadius;
+        double xmax = cell.getX() + collisionRange + largestRadius;
+        double ymin = cell.getY() - collisionRange - largestRadius;
+        double ymax = cell.getY() + collisionRange + largestRadius;
         Iterable<Cell> cellsInRange = this.range(new RectHV(xmin, ymin, xmax, ymax));
         ArrayList<Cell> cellsListOverlap = new ArrayList<>();
         if (cellsInRange == null) {
@@ -322,5 +322,3 @@ public class KdTreeMine {
         StdOut.println(kdtree.contains(p));
     }
 }
-
-

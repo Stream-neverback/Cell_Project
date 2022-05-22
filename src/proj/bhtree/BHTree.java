@@ -74,16 +74,13 @@ public class BHTree {
                         if (cell.Cell_Overlap(this.cell) && this.cell.id != cell.id) {
                             cell.setMoveMode(false);
                             cell.moveUntilContact(this.cell);
-//                            this.cell.setMoveMode(false);
                         }
 //                    }
-//                    System.out.printf("distance is %f\r\n", cell.future_distanceTo(this.cell));
                 } else {
 //                    if (this.qNode.contains_circle(cell.get_future_x(), cell.get_future_y(), radius)) {
                         if (cell.Cell_Overlap(this.cell) && this.cell.id != cell.id) {
                             cell.setMoveMode(false);
                             cell.moveUntilContact(this.cell);
-//                            this.cell.setMoveMode(false);
                         }
 //                    }
 //                    System.out.printf("distance is %f\r\n", cell.future_distanceTo(this.cell));
@@ -93,7 +90,6 @@ public class BHTree {
                     this.seChild.checkCollision(cell);
                 }
             }
-//            System.out.println(cell.getMoveMode());
         }
     }
 
