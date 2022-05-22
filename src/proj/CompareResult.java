@@ -35,8 +35,8 @@ public class CompareResult {
             double ans_x = input2.nextDouble();
             double ans_y = input2.nextDouble();
             String ans_c = input2.next();
-            boolean compare_0 = Math.abs(res_x - ans_x) < 0.001;
-            boolean compare_1 = Math.abs(res_y - ans_y) < 0.001;
+            boolean compare_0 = Math.abs(res_x - ans_x) / ans_x < 0.05;
+            boolean compare_1 = Math.abs(res_y - ans_y) / ans_y < 0.05;
             if (!compare_0 || !compare_1 || !res_c.equals(ans_c)) {
                 System.out.println(total_cnt + " is wrong!");
                 System.out.println("wrong! answer is: " + ans_x + " " + ans_y + " " + ans_c);
