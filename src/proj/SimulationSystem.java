@@ -45,7 +45,7 @@ public class SimulationSystem {
     }
 
     public void simulation(Console console, final double dt) {
-        String path = "./result/result.txt";
+        String path = "../result/result.txt";
         File f=new File(path);
         FileOutputStream fos1= null;
         try {
@@ -191,18 +191,23 @@ public class SimulationSystem {
                 for (Cell cell : cellsInRange) {
                     int i = rand.nextInt(4);
                     Color c;
-//                    Color c = switch (i) {
-//                        case 0 -> Color.RED;
-//                        case 1 -> Color.GREEN;
-//                        case 3 -> Color.YELLOW;
-//                        default -> Color.BLUE;
-//                    };
                     switch (i){
-                        case(0):c=Color.RED;
-                        case(1):c=Color.GREEN;
-//                        case(2):c=Color.BLUE;
-                        case(3):c=Color.YELLOW;
-                        default:c=Color.BLUE;
+                        case(0): {
+                            c=Color.RED;
+                            break;
+                        }
+                        case(1): {
+                            c=Color.GREEN;
+                            break;
+                        }
+                        case(3): {
+                            c=Color.YELLOW;
+                            break;
+                        }
+                        default: {
+                            c=Color.BLUE;
+                            break;
+                        }
                     }
                     cell.setColor(c, i);
                         break;
@@ -236,7 +241,7 @@ public class SimulationSystem {
 
 
     public void simulationBrute(Console console, final double dt) {
-        String path = "./result/result.txt";
+        String path = "../result/result.txt";
         File f=new File(path);
         FileOutputStream fos1= null;
         try {
@@ -373,7 +378,7 @@ public class SimulationSystem {
                     delete_list.add(cell.id);
                     break;
                 }
-                t_mouse = t + 1.0;
+                t_mouse = t + 0.5;
             }
             else if (isGUIMode && isMouseMode && isChangeColorMode && t_mouse < t && StdDraw.isMousePressed()) {
                 double mouse_pressed_x = StdDraw.mouseX();
@@ -382,28 +387,33 @@ public class SimulationSystem {
                 for (Cell cell : cellsInRange) {
                     int i = rand.nextInt(4);
                     Color c;
-//                    Color c = switch (i) {
-//                        case 0 -> Color.RED;
-//                        case 1 -> Color.GREEN;
-//                        case 3 -> Color.YELLOW;
-//                        default -> Color.BLUE;
-//                    };
                     switch (i){
-                        case(0):c=Color.RED;
-                        case(1):c=Color.GREEN;
-//                        case(2):c=Color.BLUE;
-                        case(3):c=Color.YELLOW;
-                        default:c=Color.BLUE;
+                        case(0): {
+                            c=Color.RED;
+                            break;
+                        }
+                        case(1): {
+                            c=Color.GREEN;
+                            break;
+                        }
+                        case(3): {
+                            c=Color.YELLOW;
+                            break;
+                        }
+                        default: {
+                            c=Color.BLUE;
+                            break;
+                        }
                     }
                     cell.setColor(c, i);
                     break;
                 }
-                t_mouse = t + 1.0;
+                t_mouse = t + 0.5;
             }
             if (benchmark) {
                 long end = System.nanoTime();
                 double frame_rate = 1 / ((end - begin) * 1e-9);
-                if (cnt % 50 == 0)
+                if (cnt % 20 == 0)
                     System.err.println("Frame rate in benchmark: " + frame_rate);
                 cnt++;
             }
@@ -418,7 +428,7 @@ public class SimulationSystem {
                 }
                 long end_fin = System.nanoTime();
                 double frame_rate = 1 / ((end_fin - begin) * 1e-9);
-                if (cnt % 15 == 0)
+                if (cnt % 10 == 0)
                     System.err.println("Frame rate under constrained: " + frame_rate);
                 cnt++;
             }
