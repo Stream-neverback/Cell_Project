@@ -42,6 +42,6 @@ public class Main {
         }
         String mode = isGUIMode ? "gui" : "ter";
         Console console = new Console(mode);
-        system.simulation(console, dt);
+        system.simulationBrute(console, dt);
     }
 }
