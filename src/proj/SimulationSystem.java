@@ -21,9 +21,6 @@ public class SimulationSystem {
     private double dt;
     public static String file_version = "3";
     public boolean isGUIMode; // 默认为GUI模式
-    public boolean noSpeedUp = true; // 两两检测，暴力解法
-    public boolean BHSpeedUp = false; // BH树加速
-    public boolean KDSpeedUp = false; // KD树加速
     public boolean benchmark = false; // 最佳性能模式，否则是限制为1/15秒的模式
     public boolean isMouseMode = true; // 玩法，包括两种
     public boolean isDeleteMode = false; // 玩法：删除
