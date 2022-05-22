@@ -11,6 +11,7 @@ public class Main {
         boolean isMouseMode = false;
         boolean isDeleteMode = false;
         boolean isChangeColorMode = false;
+        boolean isBruteMode = false;
         if(args.length != 0){
             for(String s:args){
                 if("playerModeChangeColor".equals(s)){
@@ -25,6 +26,8 @@ public class Main {
                     isGUIMode = false;
                 else if("benchmark".equals(s))
                     benchmark = true;
+                else if("brute".equals(s))
+                    isBruteMode = true;
             }
         }
         system.benchmark = benchmark;
@@ -42,6 +45,7 @@ public class Main {
         }
         String mode = isGUIMode ? "gui" : "ter";
         Console console = new Console(mode);
-        system.simulationBrute(console, dt);
+        if (!isBruteMode) system.simulation(console, dt);
+        else system.simulationBrute(console, dt);
     }
 }

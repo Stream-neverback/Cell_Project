@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class CompareResult {
     public static void main(String[] args){
-        String path1 = "./result/result.txt";
+        String path1 = "../result/result.txt";
         File file1 = new File(path1);
         Scanner input1 = null;
         try {
