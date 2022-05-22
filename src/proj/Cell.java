@@ -301,6 +301,28 @@ public class Cell implements Comparable<Cell> {
     }
 
 
+    public double cos_or_sin(Cell cell)
+    {
+        switch (this.color_index) {
+            case RED:
+                double sin = this.y_distanceTo(cell) / this.distanceTo(cell);
+                return sin;
+
+            case GREEN:
+                sin = this.y_distanceTo(cell) / this.distanceTo(cell);
+                return sin;
+
+            case BLUE:
+                double cos = this.x_distanceTo(cell) / this.distanceTo(cell);
+                return cos;
+
+            case YELLOW:
+                cos = this.x_distanceTo(cell) / this.distanceTo(cell);
+                return cos;
+            default:
+                return 1.0;
+        }
+    }
     public void moveUntilContact(Cell cell) {
         switch (this.color_index) {
             case RED:
