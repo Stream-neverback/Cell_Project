@@ -106,15 +106,15 @@ public class SimulationSystem {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        System.out.println("Terminal mode ends!");
-//                        return;
-                        break;
+                        System.out.println("Terminal mode ends!");
+                        return;
                     }
                     else {
                         Console.Pair<Double, Integer> pair = console.queue.get(0);
                         if (pair.key <= t + dt) {
                             Cell c = cells[pair.value];
                             String write = c.getX() + " " + c.getY() + " " + c.colorIndex() + "\n";
+                            System.out.print(write);
                             try {
                                 dos1.write(write);
                             } catch (IOException e) {
@@ -214,14 +214,14 @@ public class SimulationSystem {
                 }
                 t_mouse = t + 1.0;
             }
-            if (benchmark) {
+            if (benchmark && isGUIMode) {
                 long end = System.nanoTime();
                 double frame_rate = 1 / ((end - begin) * 1e-9);
                 if (cnt % 50 == 0)
                     System.err.println("Frame rate in benchmark: " + frame_rate);
                     cnt++;
             }
-            else {
+            else if (isGUIMode){
                 long end = System.nanoTime();
                 if (end-begin<dt*1e9) {
                     try {
@@ -305,14 +305,15 @@ public class SimulationSystem {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        System.out.println("Terminal mode ends!");
-                        break;
+                        System.out.println("Terminal mode ends!");
+                        return;
                     }
                     else {
                         Console.Pair<Double, Integer> pair = console.queue.get(0);
                         if (pair.key <= t + dt) {
                             Cell c = cells[pair.value];
                             String write = c.getX() + " " + c.getY() + " " + c.colorIndex() + "\n";
+                            System.out.print(write);
                             try {
                                 dos1.write(write);
                             } catch (IOException e) {
@@ -412,14 +413,14 @@ public class SimulationSystem {
                 }
                 t_mouse = t + 0.5;
             }
-            if (benchmark) {
+            if (benchmark && isGUIMode) {
                 long end = System.nanoTime();
                 double frame_rate = 1 / ((end - begin) * 1e-9);
                 if (cnt % 20 == 0)
                     System.err.println("Frame rate in benchmark: " + frame_rate);
                 cnt++;
             }
-            else {
+            else if (isGUIMode){
                 long end = System.nanoTime();
                 if (end-begin<dt*1e9) {
                     try {
