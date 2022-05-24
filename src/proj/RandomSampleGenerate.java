@@ -22,6 +22,9 @@ public class RandomSampleGenerate {
         int cellTotal = (int) Math.sqrt(areaX * areaY) * 2;
         double cellTotalD = cellTotal;
         Cell[] cell = new Cell[cellTotal];
+        System.out.println("Info of random generated input: ");
+        System.out.println("AreaX: " + areaX + ", AreaY: " + areaY);
+        System.out.println("Total number of cells: " + cellTotal);
         try {
             dos1.write(areaX + " " + areaY + "\n" + cellTotal + "\n");
         } catch (IOException e) {
