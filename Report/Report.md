@@ -6,7 +6,23 @@
 
 ## Part 1 概述
 
-在本次项目中，我们需要按照项目要求实现四色细胞的变色与移动功能，每种细胞的变色与移动均有不同，且规则明确。我们分别尝试暴力解法、BH树优化算法与KD树优化算法，其中我们最后采用的KD树优化算法可以达到极高的运行效率。与此同时，在正确性测试与运行效率测试中我们的程序均能完美通过。在程序运行上，我们采用脚本工具简化运行方式且方便老师和TA批改。在基础部分之外，我们还是实现了两个额外功能：随机更改细胞颜色与删除细胞功能。
+在本次项目中，我们需要按照项目要求实现四色细胞的变色与移动功能，每种细胞的变色与移动均有不同，且规则明确。项目亮点为：
+
+1. **我们分别尝试暴力解法、BH树优化算法与KD树优化算法，其中我们最后采用的KD树优化算法可以达到极高的运行效率。**
+
+2. **在正确性测试与运行效率测试中我们的程序均能完美通过，尤其是在效率方面，我们的优化算法相比暴力解法具有巨大优势，在sample2,sample3的测试中有数百倍帧率的提升！**
+
+3. **在程序运行上，我们采用脚本工具简化运行方式且方便老师和TA批改。**
+
+4. **在基础部分之外，我们还实现了几个Bonus：**
+
+   **A. 自行创建了数据集，并且有有趣的图案。**
+
+   **B. 可以随机产生数据并输入。**
+
+   **C. 随机更改细胞颜色**
+
+   **D. 删除细胞功能。**
 
 我们项目的github地址为https://github.com/Stream-neverback/Cell_Project，其中还附有项目展示的视频，包括基本功能与额外功能，欢迎star！本项目在JDK8以上环境均可运行。
 
@@ -14,15 +30,16 @@
 
 在项目根目录下，相对位置`./script/`下存储了运行的脚本与samples。其中脚本`run.bat`是基础运行脚本，老师可以运行此脚本来进行测试，所有可配置参数如下表所示：
 
-| 参数名称                | 解释                                                       |
-| ----------------------- | ---------------------------------------------------------- |
-| --terminal / --gui      | 程序将在命令行/GUI模式下运行，默认为GUI模式                |
-| benchmark               | 程序将全速运行，否则将会限制每秒不超过15帧，即切合项目要求 |
-| brute                   | 使用暴力解法，否则使用KD树优化算法                         |
-| isPlayerModeChangeColor | Bonus玩法一：点击细胞可以随机更换颜色                      |
-| isPlayerModeDelete      | Bonus玩法二：点击细胞可以删除                              |
+| 参数名称              | 解释                                                         |
+| --------------------- | ------------------------------------------------------------ |
+| --terminal / --gui    | 程序将在命令行/GUI模式下运行，默认为GUI模式                  |
+| benchmark             | 程序将全速运行，否则将会限制每秒不超过15帧，即切合项目要求   |
+| brute                 | 使用暴力解法，否则使用KD树优化算法                           |
+| playerModeRandomGen   | Bonus玩法一：随机生成合格数据并输入，画板大小、细胞信息均随机 |
+| playerModeChangeColor | Bonus玩法二：点击细胞可以随机更换颜色                        |
+| playerModeDelete      | Bonus玩法三：点击细胞可以删除                                |
 
-运行方式十分简单，直接将输入文件拖动到bat文件即可。运行后可以通过`compare.bat`进行结果对比，如果希望查看程序输出的txt（当然也会在命令行直接输出结果），可以到根目录下`./result/result.txt`下查看。还有两个脚本为`PlayerModeChangeColor`直接使用即为玩法一，`PlayerModeDelete`直接使用即为玩法二。我们尽可能方便老师与SA的批改，如有不便请多原谅，谢谢！
+运行方式十分简单，直接将输入文件拖动到bat文件即可。运行后可以通过`compare.bat`进行结果对比，如果希望查看程序输出的txt（当然也会在命令行直接输出结果），可以到根目录下`./result/result.txt`下查看。还有三个脚本为`playerModeRandomGen.bat`直接使用即为玩法一，`playerModeChangeColor.bat`直接使用即为玩法二，`playerModeDelete.bat`直接使用即为玩法三。我们尽可能方便老师与SA的批改，如有不便请多原谅，谢谢！
 
 ## Part 2 Cell类
 
@@ -457,7 +474,6 @@ Cell变色感知的代码如下
         double yminOrg = cell.getY() - cell.getPerception_r();
         double ymaxOrg = cell.getY() + cell.getPerception_r();
 
-
         double xmin = cell.getX() - cell.getPerception_r() - largestRadius;
         double xmax = cell.getX() + cell.getPerception_r() + largestRadius;
         double ymin = cell.getY() - cell.getPerception_r() - largestRadius;
@@ -474,7 +490,6 @@ Cell变色感知的代码如下
                     }
                 }
             }
-//            System.out.println(cellArrayList.size());
         }
     }
 ```
@@ -500,9 +515,6 @@ public void checkCollision(Cell cell) {
         for (Cell cell1 : cellsInRange) {
             if (cell.Cell_Overlap(cell1) && cell.id != cell1.id) {
                 cellsListOverlap.add(cell1);
-//                    cell.setMoveMode(false);
-//                    cell.moveUntilContact(cell1);
-//                    return;
             }
 
         }
@@ -514,16 +526,11 @@ public void checkCollision(Cell cell) {
             distanceList.add(cell.unitDistanceUntilContact(cell2));
         }
         Cell cellMinDistance = cellsListOverlap.get(distanceList.indexOf(Collections.min(distanceList)));
-//        System.out.println(Collections.min(distanceList));
-//        System.out.println(cell.getY() + " go to " + cellMinDistance.getY());
         cell.setMoveMode(false);
         cellMinDistance.setMoveMode(false);
         if (cell.id != cellMinDistance.id) {
             cell.moveUntilContact(cellMinDistance);
         }
-//        cell.setMoveMode(false);
-//        cellMinDistance.setMoveMode(false);
-
     }
 ```
 
@@ -678,11 +685,15 @@ System.out.println("Total wrongs: " + wrong_cnt + ", ratio: " + wrong_cnt / (dou
 
 存放于`./script/`目录下，开头为`extra_x`比如原`sample2.txt`删除两个细胞，使其能够移动。我们还仿照了学校简称`SUSTech`创造了一个`extra_2.txt`，初始效果如下图所示：
 
-#### B. 随机更改颜色模式
+#### B. 可以随机产生数据集
+
+使用存放于`./script/`目录下的`playerModeRandomGen.bat`，即可随机产生合格数据并输入，且画板大小、细胞数量、细胞位置、颜色等全部随机！
+
+#### C. 随机更改颜色模式
 
 在此模式下，点击图中的细胞可以将其颜色随机改变为四种颜色中的另一种。
 
-#### C. 点击删除细胞模式
+#### D. 点击删除细胞模式
 
 在此模式下，点击图中的细胞会将其删除，比如`sample2`中随机删除细胞后，可以使得原本阻塞的通道打开，使细胞能够移动，十分有趣。
 
@@ -720,5 +731,9 @@ A. 需要确保BHTreecell != null，因为有些QuadNode范围内没有插入细
 
 A. 需要在更改细胞颜色或位置之前输出一次细胞的信息。
 
+##### （5）小组合作代码管理问题。
 
+###### 解决方案：
+
+A. 使用Github进行代码管理，并且每次提交代码都在群里报告。虽然是这样，我们也遇到过代码版本问题，最后有惊无险地化解了。
 
