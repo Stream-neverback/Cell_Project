@@ -22,9 +22,9 @@ public class SimulationSystem {
     public static String file_version = "3";
     public boolean isGUIMode; // 默认为GUI模式
     public boolean benchmark = false; // 最佳性能模式，否则是限制为1/15秒的模式
-    public boolean isMouseMode = true; // 玩法，包括两种
+    public boolean isMouseMode = false; // 玩法，包括两种
     public boolean isDeleteMode = false; // 玩法：删除
-    public boolean isChangeColorMode = true; // 玩法：随机变换颜色
+    public boolean isChangeColorMode = false; // 玩法：随机变换颜色
 
 
     static {
@@ -106,25 +106,27 @@ public class SimulationSystem {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        System.out.println("Terminal mode ends!");
-                        return;
-                    }
-                    Console.Pair<Double, Integer> pair = console.queue.get(0);
-                    if (pair.key <= t + dt) {
-                        Cell c = cells[pair.value];
-                        String write = c.getX() + " " + c.getY() + " " + c.colorIndex() + "\n";
-                        try {
-                            dos1.write(write);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        console.queue.remove(0);
-                    } else
+//                        System.out.println("Terminal mode ends!");
+//                        return;
                         break;
+                    }
+                    else {
+                        Console.Pair<Double, Integer> pair = console.queue.get(0);
+                        if (pair.key <= t + dt) {
+                            Cell c = cells[pair.value];
+                            String write = c.getX() + " " + c.getY() + " " + c.colorIndex() + "\n";
+                            try {
+                                dos1.write(write);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            console.queue.remove(0);
+                        } else
+                            break;
+                    }
                 }
             }
             KdTreeMine tree = new KdTreeMine(range[0], range[2], range[1], range[3], console.getMaxR());
-//            CellSET brute = new CellSET(range[0], range[2], range[1], range[3], console.getMaxR());
             if (!isDeleteMode) {
                 Arrays.stream(cells).parallel()
                         .forEachOrdered(tree::insert);
@@ -179,12 +181,13 @@ public class SimulationSystem {
                     delete_list.add(cell.id);
                     break;
                 }
-                t_mouse = t + 1.0;
+                t_mouse = t + 0.5;
             }
             else if (isGUIMode && isMouseMode && isChangeColorMode && t_mouse < t && StdDraw.isMousePressed()) {
                 double mouse_pressed_x = StdDraw.mouseX();
                 double mouse_pressed_y = StdDraw.mouseY();
-                Iterable<Cell> cellsInRange = tree.range(new RectHV(mouse_pressed_x - 1, mouse_pressed_y - 1, mouse_pressed_x + 1, mouse_pressed_y + 1)); // 在树里面寻找是否有这个cell
+                double k = console.getMaxR();
+                Iterable<Cell> cellsInRange = tree.range(new RectHV(Math.max(mouse_pressed_x-k, 0), Math.max(mouse_pressed_y-k,0), Math.max(mouse_pressed_x+k,range[1]), Math.max(mouse_pressed_y+k,range[3]))); // 在树里面寻找是否有这个cell
                 for (Cell cell : cellsInRange) {
                     int i = rand.nextInt(4);
                     Color c;
@@ -302,21 +305,23 @@ public class SimulationSystem {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        System.out.println("Terminal mode ends!");
-                        return;
-                    }
-                    Console.Pair<Double, Integer> pair = console.queue.get(0);
-                    if (pair.key <= t + dt) {
-                        Cell c = cells[pair.value];
-                        String write = c.getX() + " " + c.getY() + " " + c.colorIndex() + "\n";
-                        try {
-                            dos1.write(write);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        console.queue.remove(0);
-                    } else
+//                        System.out.println("Terminal mode ends!");
                         break;
+                    }
+                    else {
+                        Console.Pair<Double, Integer> pair = console.queue.get(0);
+                        if (pair.key <= t + dt) {
+                            Cell c = cells[pair.value];
+                            String write = c.getX() + " " + c.getY() + " " + c.colorIndex() + "\n";
+                            try {
+                                dos1.write(write);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            console.queue.remove(0);
+                        } else
+                            break;
+                    }
                 }
             }
 //            KdTreeMine tree = new KdTreeMine(range[0], range[2], range[1], range[3], console.getMaxR());

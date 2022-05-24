@@ -2,5 +2,4 @@ javac -encoding UTF-8 -d ..\out -cp .;..\lib\algs4.jar ..\src\proj\*.java ..\src
 
 SET file="..\sample\sample1.txt"
 IF NOT "%1"=="" (set file="%1")
-java -cp ..\out;..\lib\algs4.jar proj.Main --gui benchmark < %file%
-pause
+java -cp ..\out;..\lib\algs4.jar proj.Main --gui benchmark playerModeRandomGen playerModeChangeColor < %file%

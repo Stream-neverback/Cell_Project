@@ -164,6 +164,10 @@ public class Cell implements Comparable<Cell> {
         return future_distanceTo(other) <= this.radius + other.radius;
     }
 
+    public boolean Cell_inOtherCell(Cell other) { // 陷入了另一个cell中
+        return distanceTo(other) <= this.radius + other.radius;
+    }
+
     public boolean Cell_NotContactWall() {
         return this.pos_x >= this.radius &&
                 this.wall_length - this.pos_x >= this.radius &&
@@ -259,7 +263,6 @@ public class Cell implements Comparable<Cell> {
             case RED:
                 if (this.pos_y + delta < wall_length - this.radius) {
                     double y = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
-
                     double out = cell.pos_y - y - pos_y;
                     return out;
                 }

@@ -22,21 +22,23 @@ public class Console {
     }
 
 
-    public Console(String mode) { // 是否是一个txt文件作为输入呢？
-//        File file = new File(file_path);
-        Scanner input = new Scanner(System.in);
-//        try {
-//            input = new Scanner(file);
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
+    public Console(String mode, boolean isplayerModeRandomGen) {
+        Scanner input = null;
+        String path = "../script/random_sample.txt";
+        File file = new File(path);
+        if (!isplayerModeRandomGen) input = new Scanner(System.in);
+        else {
+            try {
+                input = new Scanner(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
         double range_x = input.nextInt();
         double range_y = input.nextInt();
         this.range = new double[]{0, range_x, 0, range_y};
-//        System.out.println("Area of the floor plan: [" + range_x + ", " + range_y + "]");
         int count = input.nextInt();
         cells = new Cell[count];
-//        System.out.println("Cells information: ");
         maxR = 0.0;
         for (int i = 0; i < count; i++) {
             double x = input.nextDouble(); // input coordinate x of the cell
@@ -46,22 +48,17 @@ public class Console {
             if (maxR <= r) maxR = r;
             String c = input.next(); // input color of the cell
             Color color = c.equals("r") ? Color.RED : c.equals("g") ? Color.GREEN : c.equals("b") ? Color.BLUE : Color.YELLOW; // judge colors
-//            System.out.printf("X: %.1f, Y: %.1f, Radius: %.1f, Perception range: %.1f, Color: %s\n", x, y, r, p, c);
-//            System.out.println(x + " " + y + " " + r + " " + p + " " + c);
             Cell.initWall(range_x, range_y);
             Cell cell = new Cell(r, x, y, color, p); // initialize cell
             cells[i] = cell; // add the cell into array
         }
-
         terminalMode = !mode.equals("gui"); // default is gui
         if (terminalMode) { // only terminal mode should input query
             int n = input.nextInt();
-//            System.out.println("Query: ");
             for (int i = 0; i < n; i++) {
                 double time = input.nextDouble(); // time
                 int idx = input.nextInt(); // cell index
                 this.queue.add(new Pair<>(time, idx));
-//                System.out.println("Time: " + time + ", Index: " + idx);
             }
             queue = queue.stream().sorted().collect(Collectors.toList());
         }

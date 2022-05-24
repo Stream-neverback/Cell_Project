@@ -2,6 +2,8 @@ package proj;
 
 import java.io.OutputStreamWriter;
 
+import static proj.RandomSampleGenerate.SampleGenerate;
+
 public class Main {
     public static void main(String[] args){
         SimulationSystem system = SimulationSystem.getInstance();
@@ -12,6 +14,7 @@ public class Main {
         boolean isDeleteMode = false;
         boolean isChangeColorMode = false;
         boolean isBruteMode = false;
+        boolean isplayerModeRandomGen = false;
         if(args.length != 0){
             for(String s:args){
                 if("playerModeChangeColor".equals(s)){
@@ -22,12 +25,14 @@ public class Main {
                     isMouseMode = true;
                     isDeleteMode = true;
                 }
-                else if("--ter".equals(s))
+                else if("--terminal".equals(s))
                     isGUIMode = false;
                 else if("benchmark".equals(s))
                     benchmark = true;
                 else if("brute".equals(s))
                     isBruteMode = true;
+                else if ("playerModeRandomGen".equals(s))
+                    isplayerModeRandomGen = true;
             }
         }
         system.benchmark = benchmark;
@@ -44,7 +49,8 @@ public class Main {
             }
         }
         String mode = isGUIMode ? "gui" : "ter";
-        Console console = new Console(mode);
+        if (isplayerModeRandomGen) SampleGenerate();
+        Console console = new Console(mode, isplayerModeRandomGen);
         if (!isBruteMode) system.simulation(console, dt);
         else system.simulationBrute(console, dt);
     }

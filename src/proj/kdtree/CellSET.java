@@ -74,7 +74,6 @@ public class CellSET {
         for (Cell p: rb) {
             if (rect.contains(p)) ans.push(p);
         }
-
         return ans;
     }
 
