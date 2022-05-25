@@ -198,7 +198,7 @@ public class Cell implements Comparable<Cell> {
     }
 
     public boolean isOut() {
-        if (pos_x + radius > wall_width || pos_y + radius > wall_length || pos_x - radius < 0 || pos_y - radius < 0) {
+        if (pos_x + radius > wall_width + 0.000001 || pos_y + radius > wall_length + 0.000001 || pos_x - radius < 0 - 0.000001 || pos_y - radius < - 0.000001 ) {
             System.out.println("Out! " + (pos_x) + " " + pos_y);
             return true;
         }
@@ -213,10 +213,6 @@ public class Cell implements Comparable<Cell> {
                 } else if (this.pos_y + delta >= wall_length - this.radius && this.MOVE) {
                     this.pos_y = wall_length - this.radius;
                 }
-//                if(isOut()){System.out.println("11111111111111111111111111111111111111111111111111");
-//                    System.out.println(this.color);
-//                    System.out.println(this.color_index);
-//                    System.out.println(this.MOVE);}
                 break;
 
             case GREEN:
@@ -225,10 +221,6 @@ public class Cell implements Comparable<Cell> {
                 } else if (this.pos_y - delta <= 0 + this.radius && this.MOVE) {
                     this.pos_y = 0 + this.radius;
                 }
-//                if(isOut()){System.out.println("11111111111111111111111111111111111111111111111111");
-//                    System.out.println(this.color);
-//                    System.out.println(this.color_index);
-//                    System.out.println(this.MOVE);}
                 break;
 
             case BLUE:
@@ -237,10 +229,6 @@ public class Cell implements Comparable<Cell> {
                 } else if (this.pos_x - delta <= 0 + this.radius && this.MOVE) {
                     this.pos_x = 0 + this.radius;
                 }
-//                if(isOut()){System.out.println("11111111111111111111111111111111111111111111111111");
-//                    System.out.println(this.color);
-//                    System.out.println(this.color_index);
-//                    System.out.println(this.MOVE);}
                 break;
 
             case YELLOW:
@@ -249,10 +237,6 @@ public class Cell implements Comparable<Cell> {
                 } else if (this.pos_x + delta >= wall_width - this.radius && this.MOVE) {
                     this.pos_x = wall_width - this.radius;
                 }
-//                if(isOut()){System.out.println("11111111111111111111111111111111111111111111111111");
-//                    System.out.println(this.color);
-//                    System.out.println(this.color_index);
-//                    System.out.println(this.MOVE);}
                 break;
             default:
                 break;

@@ -87,11 +87,11 @@ public class SimulationSystem {
             begin = System.nanoTime();
             if (isGUIMode) {
                 StdDraw.clear(StdDraw.BLACK);
-                try {
-                    sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    sleep(500);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
                 if (!isDeleteMode){
                     Arrays.stream(cells).parallel().forEachOrdered(Cell::draw);
                 }
@@ -186,7 +186,7 @@ public class SimulationSystem {
                     delete_list.add(cell.id);
                     break;
                 }
-                t_mouse = t + 0.3;
+                t_mouse = t + 0.5;
             }
             else if (isGUIMode && isMouseMode && isChangeColorMode && t_mouse < t && StdDraw.isMousePressed()) {
                 double mouse_pressed_x = StdDraw.mouseX();
@@ -217,7 +217,7 @@ public class SimulationSystem {
                     cell.setColor(c, i);
                         break;
                 }
-                t_mouse = t + 0.3;
+                t_mouse = t + 0.5;
             }
             if (benchmark && isGUIMode) {
                 long end = System.nanoTime();

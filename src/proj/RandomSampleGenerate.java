@@ -17,8 +17,14 @@ public class RandomSampleGenerate {
             e.printStackTrace();
         }
         OutputStreamWriter dos1=new OutputStreamWriter(fos1);
-        int areaX = random.nextInt(600)+50;
-        int areaY = random.nextInt(600)+50;
+        double areaX = 100;
+        double areaY = 100;
+        while(true) {
+            areaX = random.nextInt(600) + 50;
+            areaY = random.nextInt(600) + 50;
+            if (areaY / areaX > 2 || areaX / areaY > 2) continue;
+            else break;
+        }
         int cellTotal = (int) Math.sqrt(areaX * areaY) * 2;
         double cellTotalD = cellTotal;
         Cell[] cell = new Cell[cellTotal];
@@ -41,8 +47,8 @@ public class RandomSampleGenerate {
             Cell singelCell;
             boolean flag = false;
             while(!flag) {
-                x = random.nextInt(areaX);
-                y = random.nextInt(areaY);
+                x = random.nextInt((int) areaX);
+                y = random.nextInt((int) areaY);
                 r = random.nextInt((int) (Math.min(areaX,areaY)/Math.round((Math.sqrt(cellTotalD)))));
                 r = r / 2;
                 p = 20 * random.nextInt((int) (Math.min(areaX,areaY)/Math.round((Math.sqrt(cellTotalD)))));
