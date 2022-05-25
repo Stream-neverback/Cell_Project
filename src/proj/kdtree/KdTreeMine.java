@@ -26,7 +26,7 @@ public class KdTreeMine {
         rangeYMin = ymin;
         rangeYMax = ymax;
         this.largestRadius = largestRadius;
-        collisionRange = largestRadius * 2 + 2 / 15;
+        collisionRange = largestRadius * 2 + 2.0 / 15;
         size = 0;
     }
 
@@ -274,7 +274,7 @@ public class KdTreeMine {
         }
     }
 
-    public void checkCollision(Cell cell) {
+    public void checkCollisionOld(Cell cell) {
         cell.setMoveMode(true);
         double xmin = cell.getX() - collisionRange - largestRadius;
         double xmax = cell.getX() + collisionRange + largestRadius;
@@ -292,7 +292,6 @@ public class KdTreeMine {
 //                    cell.moveUntilContact(cell1);
 //                    return;
             }
-
         }
         if (cellsListOverlap.size() == 0) {
             return;
@@ -311,6 +310,44 @@ public class KdTreeMine {
         }
 //        cell.setMoveMode(false);
 //        cellMinDistance.setMoveMode(false);
+
+    }
+
+    public void checkCollision(Cell cell) {
+        cell.setMoveMode(true);
+        double xmin = cell.getX() - collisionRange - largestRadius;
+        double xmax = cell.getX() + collisionRange + largestRadius;
+        double ymin = cell.getY() - collisionRange - largestRadius;
+        double ymax = cell.getY() + collisionRange + largestRadius;
+        RectHV checkRect = cell.getForwardRect(collisionRange+largestRadius);
+        Iterable<Cell> cellsInRange = this.range(checkRect);
+        ArrayList<Cell> cellsListOverlap = new ArrayList<>();
+        if (cellsInRange == null) {
+            return;
+        }
+        for (Cell cell1 : cellsInRange) {
+            if (cell.id != cell1.id) {
+                cellsListOverlap.add(cell1);
+            }
+
+        }
+        if (cellsListOverlap.size() == 0) {
+            return;
+        }
+        ArrayList<Double> distanceList = new ArrayList<>();
+        for (Cell cell2 : cellsListOverlap) {
+            distanceList.add(cell.unitDistanceUntilContact(cell2));
+        }
+        Cell cellMinDistance = cellsListOverlap.get(distanceList.indexOf(Collections.min(distanceList)));
+//        System.out.println(cell.getY() + " go to " + cellMinDistance.getY());
+        cell.setMoveMode(false);
+        cellMinDistance.setMoveMode(false);
+        if (cell.id != cellMinDistance.id && Collections.min(distanceList)<1.0/15) {
+            cell.moveUntilContact(cellMinDistance);
+            return;
+        }
+        cell.setMoveMode(true);
+        cellMinDistance.setMoveMode(true);
 
     }
 

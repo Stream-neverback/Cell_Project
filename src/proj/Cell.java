@@ -4,6 +4,7 @@ import edu.princeton.cs.algs4.Point2D;
 import proj.bhtree.BHTree;
 import proj.bhtree.QuadNode;
 import edu.princeton.cs.algs4.StdDraw;
+import proj.kdtree.RectHV;
 
 import java.awt.Color;
 
@@ -363,6 +364,25 @@ public class Cell implements Comparable<Cell> {
                 }
             default:
                 break;
+        }
+    }
+
+
+    public RectHV getForwardRect(double range){
+        double xmin = pos_x - range;
+        double xmax = pos_x+ range;
+        double ymin = pos_y - range;
+        double ymax = pos_y + range;
+        switch (this.color_index){
+            case RED:
+                return new RectHV(xmin,pos_y,xmax,ymax);
+            case GREEN:
+                return new RectHV(xmin,ymin,xmax,pos_y);
+            case BLUE:
+                return new RectHV(xmin,ymin,pos_x,ymax);
+            case YELLOW:
+                return new RectHV(pos_x,ymin,xmax,ymax);
+            default:return null;
         }
     }
 
