@@ -17,8 +17,8 @@ public class RandomSampleGenerate {
             e.printStackTrace();
         }
         OutputStreamWriter dos1=new OutputStreamWriter(fos1);
-        int areaX = random.nextInt(1000)+50;
-        int areaY = random.nextInt(1000)+50;
+        int areaX = random.nextInt(600)+50;
+        int areaY = random.nextInt(600)+50;
         int cellTotal = (int) Math.sqrt(areaX * areaY) * 2;
         double cellTotalD = cellTotal;
         Cell[] cell = new Cell[cellTotal];

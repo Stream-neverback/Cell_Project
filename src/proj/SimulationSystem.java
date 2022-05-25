@@ -87,6 +87,11 @@ public class SimulationSystem {
             begin = System.nanoTime();
             if (isGUIMode) {
                 StdDraw.clear(StdDraw.BLACK);
+                try {
+                    sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 if (!isDeleteMode){
                     Arrays.stream(cells).parallel().forEachOrdered(Cell::draw);
                 }
@@ -181,13 +186,13 @@ public class SimulationSystem {
                     delete_list.add(cell.id);
                     break;
                 }
-                t_mouse = t + 0.5;
+                t_mouse = t + 0.3;
             }
             else if (isGUIMode && isMouseMode && isChangeColorMode && t_mouse < t && StdDraw.isMousePressed()) {
                 double mouse_pressed_x = StdDraw.mouseX();
                 double mouse_pressed_y = StdDraw.mouseY();
                 double k = console.getMaxR();
-                Iterable<Cell> cellsInRange = tree.range(new RectHV(Math.max(mouse_pressed_x-k, 0), Math.max(mouse_pressed_y-k,0), Math.max(mouse_pressed_x+k,range[1]), Math.max(mouse_pressed_y+k,range[3]))); // 在树里面寻找是否有这个cell
+                Iterable<Cell> cellsInRange = tree.range(new RectHV(Math.max(mouse_pressed_x-k, 0), Math.max(mouse_pressed_y-k,0), Math.min(mouse_pressed_x+k,range[1]), Math.min(mouse_pressed_y+k,range[3]))); // 在树里面寻找是否有这个cell
                 for (Cell cell : cellsInRange) {
                     int i = rand.nextInt(4);
                     Color c;
@@ -212,7 +217,7 @@ public class SimulationSystem {
                     cell.setColor(c, i);
                         break;
                 }
-                t_mouse = t + 1.0;
+                t_mouse = t + 0.3;
             }
             if (benchmark && isGUIMode) {
                 long end = System.nanoTime();

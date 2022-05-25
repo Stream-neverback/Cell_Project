@@ -34,8 +34,8 @@ public class Console {
                 e.printStackTrace();
             }
         }
-        double range_x = input.nextInt();
-        double range_y = input.nextInt();
+        double range_x = input.nextDouble();
+        double range_y = input.nextDouble();
         this.range = new double[]{0, range_x, 0, range_y};
         int count = input.nextInt();
         cells = new Cell[count];
