@@ -111,7 +111,7 @@ public class SimulationSystem {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        System.out.println("Terminal mode ends!");
+//                        System.out.println("Terminal mode ends!");
                         return;
                     }
                     else {
@@ -310,7 +310,7 @@ public class SimulationSystem {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        System.out.println("Terminal mode ends!");
+//                        System.out.println("Terminal mode ends!");
                         return;
                     }
                     else {
