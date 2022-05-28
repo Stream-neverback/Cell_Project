@@ -319,8 +319,9 @@ public class KdTreeMine {
         double xmax = cell.getX() + collisionRange + largestRadius;
         double ymin = cell.getY() - collisionRange - largestRadius;
         double ymax = cell.getY() + collisionRange + largestRadius;
-        RectHV checkRect = cell.getForwardRect(collisionRange+largestRadius);
-        Iterable<Cell> cellsInRange = this.range(checkRect);
+//        System.out.println(collisionRange+largestRadius);
+//        RectHV checkRect = cell.getForwardRect(collisionRange+largestRadius);
+        Iterable<Cell> cellsInRange = this.range(new RectHV(xmin, ymin, xmax, ymax));
         ArrayList<Cell> cellsListOverlap = new ArrayList<>();
         if (cellsInRange == null) {
             return;
@@ -329,16 +330,23 @@ public class KdTreeMine {
             if (cell.id != cell1.id) {
                 cellsListOverlap.add(cell1);
             }
-
         }
         if (cellsListOverlap.size() == 0) {
             return;
         }
         ArrayList<Double> distanceList = new ArrayList<>();
+        ArrayList<Cell> cellInDirection = new ArrayList<>();
         for (Cell cell2 : cellsListOverlap) {
-            distanceList.add(cell.unitDistanceUntilContact(cell2));
+            double distance = cell.unitDistanceUntilContact(cell2);
+            if(distance>=-0.00001){
+                distanceList.add(distance);
+                cellInDirection.add(cell2);
+            }
         }
-        Cell cellMinDistance = cellsListOverlap.get(distanceList.indexOf(Collections.min(distanceList)));
+        if(cellInDirection.size()==0){
+            return;
+        }
+        Cell cellMinDistance = cellInDirection.get(distanceList.indexOf(Collections.min(distanceList)));
 //        System.out.println(cell.getY() + " go to " + cellMinDistance.getY());
         cell.setMoveMode(false);
         cellMinDistance.setMoveMode(false);
@@ -350,6 +358,9 @@ public class KdTreeMine {
         cellMinDistance.setMoveMode(true);
 
     }
+
+
+
 
 
     public static void main(String[] args) {

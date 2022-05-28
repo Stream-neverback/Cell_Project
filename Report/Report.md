@@ -353,7 +353,7 @@ KD-Tree是一种对k维空间中的实例点进行存储以便对其进行快速
 
 ![kdtree_insert](D:\Learning\SUSTech2022春\DSAA\proj\Cell_Project\kdtree_insert.png)
 
-为了实现这种形式的插入，每个节点都具有其 左/下子树以及右上子树并且包含其对应的与坐标轴平行的相关矩形。在插入的过程中通过奇偶层确定该层对X获Y进行划分。如果选择按照x轴划分，所有x值小于指定值的节点都会出现在左子树，所有x值大于指定值的节点都会出现在右子树。如果选择按照y轴划分，所有y值小于指定值的节点都会出现在下子树，所有y值大于指定值的节点都会出现在上子树。在搜索的过程中，我们通过与节点相关的矩形与我们选择的矩形框是否重合或者点坐标是否包含在我们所选择的矩形框中来确定对应的Cell在我们需要的范围内。
+为了实现这种形式的插入，每个节点都具有其 左/下子树以及右上子树并且包含其对应的与坐标轴平行的相关矩形。在插入的过程中通过奇偶层确定该层对X或Y进行划分。如果选择按照x轴划分，所有x值小于指定值的节点都会出现在左子树，所有x值大于指定值的节点都会出现在右子树。如果选择按照y轴划分，所有y值小于指定值的节点都会出现在下子树，所有y值大于指定值的节点都会出现在上子树。在搜索的过程中，我们通过与节点相关的矩形与我们选择的矩形框是否重合或者点坐标是否包含在我们所选择的矩形框中来确定对应的Cell在我们需要的范围内。
 
 Node 的定义如下：
 
@@ -496,41 +496,55 @@ Cell变色感知的代码如下
 
 
 
-碰撞的检测思路与感知变色的思路相似。首先我们确定一个即将可能发生碰撞的范围。特别的是，为了避免巨大Cell与小Cell相撞，我们检测范围考虑了最大半径的影响。这里我们将感知范围定为一定时间的可能运动距离加上3倍的Cell最大半径。
+碰撞的检测思路与感知变色的思路相似。首先我们确定一个即将可能发生碰撞的范围。特别的是，为了避免巨大Cell与小Cell相撞，我们检测范围考虑了最大半径的影响。在本项目中，tree的更新在每次cell遍历结束后进行，那么在实际求解过程中对于检查范围的确认需要增加最大1/15的运动距离。实际上为了确保框定的准确性，这里我们将感知范围定为一定时间的可能运动距离加上3倍的Cell最大半径。
 
-而后，我们对每一个可能碰撞的小球进行碰撞运算，在将来能够发生碰撞的情况里确定可以允许的最大运动距离（即发生碰撞所需的最小运动距离）。而后使碰撞的小球相贴。
+而后，我们对每一个可能碰撞的小球进行碰撞运算，在将来能够发生碰撞的情况里确定可以允许的最大正向运动距离（即发生碰撞所需的最小运动距离）。而后使碰撞的小球相贴。
 
 ```java
-public void checkCollision(Cell cell) {
+    public void checkCollision(Cell cell) {
         cell.setMoveMode(true);
         double xmin = cell.getX() - collisionRange - largestRadius;
         double xmax = cell.getX() + collisionRange + largestRadius;
         double ymin = cell.getY() - collisionRange - largestRadius;
         double ymax = cell.getY() + collisionRange + largestRadius;
+//        System.out.println(collisionRange+largestRadius);
+//        RectHV checkRect = cell.getForwardRect(collisionRange+largestRadius);
         Iterable<Cell> cellsInRange = this.range(new RectHV(xmin, ymin, xmax, ymax));
         ArrayList<Cell> cellsListOverlap = new ArrayList<>();
         if (cellsInRange == null) {
             return;
         }
         for (Cell cell1 : cellsInRange) {
-            if (cell.Cell_Overlap(cell1) && cell.id != cell1.id) {
+            if (cell.id != cell1.id) {
                 cellsListOverlap.add(cell1);
             }
-
         }
         if (cellsListOverlap.size() == 0) {
             return;
         }
         ArrayList<Double> distanceList = new ArrayList<>();
+        ArrayList<Cell> cellInDirection = new ArrayList<>();
         for (Cell cell2 : cellsListOverlap) {
-            distanceList.add(cell.unitDistanceUntilContact(cell2));
+            double distance = cell.unitDistanceUntilContact(cell2);
+            if(distance>=-0.00001){
+                distanceList.add(distance);
+                cellInDirection.add(cell2);
+            }
         }
-        Cell cellMinDistance = cellsListOverlap.get(distanceList.indexOf(Collections.min(distanceList)));
+        if(cellInDirection.size()==0){
+            return;
+        }
+        Cell cellMinDistance = cellInDirection.get(distanceList.indexOf(Collections.min(distanceList)));
+//        System.out.println(cell.getY() + " go to " + cellMinDistance.getY());
         cell.setMoveMode(false);
         cellMinDistance.setMoveMode(false);
-        if (cell.id != cellMinDistance.id) {
+        if (cell.id != cellMinDistance.id && Collections.min(distanceList)<1.0/15) {
             cell.moveUntilContact(cellMinDistance);
+            return;
         }
+        cell.setMoveMode(true);
+        cellMinDistance.setMoveMode(true);
+
     }
 ```
 
@@ -651,7 +665,7 @@ System.out.println("Total wrongs: " + wrong_cnt + ", ratio: " + wrong_cnt / (dou
 
 #### B. 运行效率测试
 
-针对运行效率的测试，我们选取的指标为每秒帧数，即每秒帧数越大越好，则运行参数选择`benchmark`放开帧率限制。同时，测试环境应为细胞未稳定前的状态。测试电脑配置为英特尔8代i5笔记本芯片。
+针对运行效率的测试，我们选取的指标为每秒帧数，即每秒帧数越大越好，则运行参数选择`benchmark`放开帧率限制。同时，测试环境应为细胞未稳定前的状态。测试电脑配置为英特尔8代i5笔记本芯片（测试过程中请勿限制CPU功耗并检查CPU占用情况以保证测试结果正常）。
 
 | 测试集  | 运行模式 | 平均帧率 |
 | ------- | -------- | -------- |

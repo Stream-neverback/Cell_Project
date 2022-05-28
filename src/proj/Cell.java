@@ -245,43 +245,26 @@ public class Cell implements Comparable<Cell> {
 
     public double unitDistanceUntilContact(Cell cell) {
         switch (this.color_index) {
-            case RED:
-                if (this.pos_y + delta < wall_length - this.radius) {
+            case RED:{
                     double y = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
                     double out = cell.pos_y - y - pos_y;
-                    return out;
-                }
-                if (isOut()) {
-                    System.out.println("11111111111111111111111111111111111111111111111111");
-                    System.out.println(this.color);
-                    System.out.println(this.color_index);
-                    System.out.println(this.MOVE);
-                }
-                break;
-
-            case GREEN:
-                if (this.pos_y - delta > 0 + this.radius) {
+                    return out;}
+            case GREEN:{
                     double y = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.x_distanceTo(cell) * this.x_distanceTo(cell));
                     double out = pos_y - (cell.pos_y + y);
-                    return out;
-                }
-                break;
+                    return out;}
 
-            case BLUE:
-                if (this.pos_x - delta > 0 + this.radius) {
+
+            case BLUE:{
                     double x = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
                     double out = -(cell.pos_x + x) + pos_x;
-                    return out;
-                }
-                break;
+                    return out;}
+            case YELLOW:{
 
-            case YELLOW:
-                if (this.pos_x + delta < wall_width - this.radius) {
                     double x = Math.sqrt((this.radius + cell.radius) * (this.radius + cell.radius) - this.y_distanceTo(cell) * this.y_distanceTo(cell));
                     double out = cell.pos_x - x - pos_x;
-                    return out;
-                }
-                break;
+                    return out;}
+
             default:
                 break;
         }
