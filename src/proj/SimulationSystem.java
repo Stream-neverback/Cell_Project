@@ -25,6 +25,7 @@ public class SimulationSystem {
     public boolean isMouseMode = false; // 玩法，包括两种
     public boolean isDeleteMode = false; // 玩法：删除
     public boolean isChangeColorMode = false; // 玩法：随机变换颜色
+    public boolean showFrameRate = false;
 
 
     static {
@@ -219,14 +220,14 @@ public class SimulationSystem {
                 }
                 t_mouse = t + 0.5;
             }
-            if (benchmark && isGUIMode) {
+            if (benchmark && showFrameRate) {
                 long end = System.nanoTime();
                 double frame_rate = 1 / ((end - begin) * 1e-9);
                 if (cnt % 50 == 0)
                     System.err.println("Frame rate in benchmark: " + frame_rate);
                     cnt++;
             }
-            else if (isGUIMode){
+            else if (showFrameRate){
                 long end = System.nanoTime();
                 if (end-begin<dt*1e9) {
                     try {
@@ -418,14 +419,14 @@ public class SimulationSystem {
                 }
                 t_mouse = t + 0.5;
             }
-            if (benchmark && isGUIMode) {
+            if (benchmark && showFrameRate) {
                 long end = System.nanoTime();
                 double frame_rate = 1 / ((end - begin) * 1e-9);
                 if (cnt % 20 == 0)
                     System.err.println("Frame rate in benchmark: " + frame_rate);
                 cnt++;
             }
-            else if (isGUIMode){
+            else if (showFrameRate){
                 long end = System.nanoTime();
                 if (end-begin<dt*1e9) {
                     try {

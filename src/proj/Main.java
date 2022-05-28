@@ -15,6 +15,7 @@ public class Main {
         boolean isChangeColorMode = false;
         boolean isBruteMode = false;
         boolean isplayerModeRandomGen = false;
+        boolean showFrameRate = false;
         if(args.length != 0){
             for(String s:args){
                 if("playerModeChangeColor".equals(s)){
@@ -33,10 +34,14 @@ public class Main {
                     isBruteMode = true;
                 else if ("playerModeRandomGen".equals(s))
                     isplayerModeRandomGen = true;
+                else if ("showFrameRate".equals(s))
+                    showFrameRate = true;
             }
         }
         system.benchmark = benchmark;
         system.isGUIMode = isGUIMode;
+        if (isGUIMode) system.showFrameRate = true;
+        else if (showFrameRate) system.showFrameRate = true;
         if (isGUIMode && isMouseMode) {
             system.isMouseMode = true;
             if (isChangeColorMode) {

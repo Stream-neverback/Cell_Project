@@ -35,6 +35,7 @@
 | --terminal / --gui    | 程序将在命令行/GUI模式下运行，默认为GUI模式                  |
 | benchmark             | 程序将全速运行，否则将会限制每秒不超过15帧，即切合项目要求   |
 | brute                 | 使用暴力解法，否则使用KD树优化算法                           |
+| showFrameRate         | 是否在terminal模式下也输出帧率（默认不输出，方便批改）       |
 | playerModeRandomGen   | Bonus玩法一：随机生成合格数据并输入，画板大小、细胞信息均随机 |
 | playerModeChangeColor | Bonus玩法二：点击细胞可以随机更换颜色                        |
 | playerModeDelete      | Bonus玩法三：点击细胞可以删除                                |
@@ -351,7 +352,7 @@ public void checkDetection(Cell cell)
 
 KD-Tree是一种对k维空间中的实例点进行存储以便对其进行快速检索的树形结构，主要应用于多维[空间](https://baike.baidu.com/item/空间/55280)关键数据的搜索（如：范围搜索和最近邻搜索）。本项目设计了2D-Tree以处理2D平面内的Cell之间的空间关系搜索。其中，2D-Tree最关键的部分是对于节点的插入和搜索。如下图：
 
-![kdtree_insert](D:\Learning\SUSTech2022春\DSAA\proj\Cell_Project\kdtree_insert.png)
+![kdtree_insert](kdtree_insert.png)
 
 为了实现这种形式的插入，每个节点都具有其 左/下子树以及右上子树并且包含其对应的与坐标轴平行的相关矩形。在插入的过程中通过奇偶层确定该层对X或Y进行划分。如果选择按照x轴划分，所有x值小于指定值的节点都会出现在左子树，所有x值大于指定值的节点都会出现在右子树。如果选择按照y轴划分，所有y值小于指定值的节点都会出现在下子树，所有y值大于指定值的节点都会出现在上子树。在搜索的过程中，我们通过与节点相关的矩形与我们选择的矩形框是否重合或者点坐标是否包含在我们所选择的矩形框中来确定对应的Cell在我们需要的范围内。
 
@@ -695,9 +696,13 @@ System.out.println("Total wrongs: " + wrong_cnt + ", ratio: " + wrong_cnt / (dou
 
 在实现基本功能正确无误的前提下，我们还发挥想象力，创造出两种特殊的模式。模式的展示也附在项目文件中的展示视频中，欢迎尝试！注，使用`sample2`测试效果最好，因为`sample1`细胞个数太少，`sample3`画板太大难以看出区别。
 
-#### A. 更多samples
+#### A. 完全随机产生更多samples
 
-存放于`./script/`目录下，开头为`extra_x`比如原`sample2.txt`删除两个细胞，使其能够移动。我们还仿照了学校简称`SUSTech`创造了一个`extra_2.txt`，初始效果如下图所示：
+脚本存放于`./script/`目录下，名为`playerModeRandomGen.bat`运行可以随机产生数据并在GUI模式下运行，画板大小、细胞个数、细胞颜色等均为随机，且产生的数据必定符合规格，即不会出现细胞重叠或出界的情况，而且程序内也在一定规律内控制细胞的个数，使其能够呈现出真正细胞运动的一丝感觉。
+
+![random_cells](random_cells.png)
+
+比如上图就是随机产生的一个数据集，细胞分布均匀且填充率合理，能呈现出细胞运动的美妙之处。
 
 #### B. 可以随机产生数据集
 
